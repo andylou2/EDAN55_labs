@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import random
 import numpy as np
 import math
-# import asyncio
+import asyncio
 from multiprocessing import Queue
+from multiprocessing import SimpleQueue
 
 class MarkingTree:
     def __init__(self, trial, h):
@@ -18,13 +19,13 @@ class MarkingTree:
         mapping = dict(zip(self.gr.nodes(), range(1,self.N+1)))
         self.gr = nx.relabel_nodes(self.gr, mapping)
 
-        possibleChoices = np.arange(1,self.N + 1)
-        new_possibleChoices = self.knuth_shuffle(possibleChoices)
-        # self.nodes = [x+1 for x in self.gr.nodes()]
+        # possibleChoices = np.arange(1,self.N + 1)
+        # new_possibleChoices = self.knuth_shuffle(possibleChoices)
+
         self.nodes = self.gr.nodes()
         self.colored = []
         self.justColored = []
-        self.needsChecking = Queue(maxsize=0)
+        self.needsChecking = SimpleQueue()
 
         self.rnd = 0
         i = 0
@@ -36,21 +37,23 @@ class MarkingTree:
             i+=1
             # print("current round: {}".format(self.rnd))
 
-            # choice = random.randint(1, self.N)
+            choice = random.randint(1, self.N)
             # print("round: {}".format(self.rnd))
             # print("possible_choices: {}".format(new_possibleChoices))
-            choice = new_possibleChoices[i - 1]
-
+            # choice = new_possibleChoices[i - 1]
+            self.rnd += 1
 
             # print("Chose node: {}".format(choice))
             # color if not already colored
             if choice not in self.colored:
-                self.rnd += 1
+                # print("Chose node: {}".format(choice))
                 self.colored += [choice]
                 # checking for cascading effect
                 self.cascade(choice) #nodes colored recently
                 # print("Things that have been colored: {}".format(newlyColored))
                 self.justColored += [choice]
+                # if not self.needsChecking.empty():
+                #     print("queue is not empty!")
                 while not self.needsChecking.empty():
                     # print("queue length: {}".format(self.needsChecking))
                     self.cascade(self.needsChecking.get())
@@ -164,17 +167,18 @@ def main():
     # N = 1048575
     N = 1023
     H = int(math.log(N+1, 2))
-    T = 100
+    T = 10
 
     results = []
-    for j in range(1, H):
+    for j in range(18, 19):
         for i in range(T):
             m = MarkingTree(i, j)
             # m.show()
             results += [m.rnd]
+            # print("rounds: {}".format(m.rnd))
             # print('height: {}, trial: {}, rounds:{}'.format(j, i, m.rnd))
 
-        print(results)
+        # print(results)
         sd = np.std(results)
         mean = np.mean(results)
         results = []
