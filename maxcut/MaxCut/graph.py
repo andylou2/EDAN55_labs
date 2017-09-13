@@ -12,6 +12,8 @@ class Graph:
         :param edges:
         :return:
         """
+        self.nodes = nodes
+        self.edges = edges
         self.components = np.zeros((nodes, nodes))
 
 
@@ -19,6 +21,7 @@ class Graph:
         #even if the graph is not simple (multiple edges from same node) we can still "combine"
         # the edge by adding the weights together and treating it as one edge
         self.components[source-1][dest-1] += weight
+        self.components[dest-1][source-1] += weight
 
     def toString(self):
         print(self.components)
