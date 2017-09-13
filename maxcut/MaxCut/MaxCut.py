@@ -22,7 +22,14 @@ def text_to_graph(file):
         # g.toString()
         return g
 
+
 def R(g):
+    '''
+    DESC:   Implements algorithm R
+            Randomly partitions graph g and calculates MaxCut
+    INPUT:  Graph g
+    OUTPUT: Value of maxcut w
+    '''
     A = []
     B = []
     # print("g nodes:".format)
@@ -31,6 +38,13 @@ def R(g):
     return w
 
 def S(g):
+    '''
+    DESC:   Implements algorithm S
+            greedily swap a node between paritions until MaxCut cannot
+            be improved
+    INPUT:  Graph g
+    OUTPUT: Value of maxcut w
+    '''
     # start with all nodes in A
     A = [i for i in range(g.nodes)]
     B = []
@@ -51,6 +65,26 @@ def S(g):
         difference = S_helper(A, B, g)
     return cutSize(A, B, g)
 
+def SR(g):
+    '''
+    DESC:   Implementation of SR algorithm
+            1) Randomly paritions graph g
+            2) greedily calculate MaxCut
+    INPUT:  Graph g
+    OUTPUT: Value of maxcut w
+    '''
+    A = []
+    B = []
+    randomPartition(A, B, g)
+
+    difference = S_helper(A, B, g)
+    while True:
+        #if there was no change after checking every node again, we break out of loop
+        print("delta:{}".format(difference))
+        if difference <= 0:
+            break
+        difference = S_helper(A, B, g)
+    return cutSize(A, B, g)
 
 
 
@@ -69,19 +103,6 @@ def S_helper(A, B, g):
 
     return cum_d
 
-def SR(g):
-    A = []
-    B = []
-    randomPartition(A, B, g)
-
-    difference = S_helper(A, B, g)
-    while True:
-        #if there was no change after checking every node again, we break out of loop
-        print("delta:{}".format(difference))
-        if difference <= 0:
-            break
-        difference = S_helper(A, B, g)
-    return cutSize(A, B, g)
 
 def randomPartition(A, B, g):
     for i in range(g.nodes):
@@ -116,22 +137,35 @@ def cutSize(A, B, g):
             weight += g.components[n][dest]
     return weight
 
+
 def main():
     np.set_printoptions(threshold='nan')
+
+    # parse input graph
     # g = text_to_graph("data/matching_1000.txt")
     g = text_to_graph("data/pw09_100.9.txt")
     # text_to_graph("data/test.txt")
 
+    num_trials = 1
+    # Accumuates values for each trial
     vals = []
+    # tracks maxcut over several trials
     max_val = 0
-    for i in range(1):
+    
+    # Simulate experiment over several trials
+    for i in range(num_trials):
         val = SR(g)
         vals += [val]
         if val > max_val:
             max_val = val
-    print("maximum:{}".format(max_val))
-    print("vals_size:{}".format(len(vals)))
-    print("average:{}".format(np.mean(np.array(vals))))
+
+    print("--- start --- ")
+    print("Running Algorithm {}".format(alg))    
+    print("num_trials = {}".format(num_trials))
+    
+    print("\t maximum:{}".format(max_val))
+    print("\t average:{}".format(np.mean(np.array(vals))))
+    print("---  end  ---")
 
 
 if __name__ == '__main__':
