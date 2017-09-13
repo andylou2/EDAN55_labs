@@ -142,11 +142,11 @@ def main():
     np.set_printoptions(threshold='nan')
 
     # parse input graph
-    # g = text_to_graph("data/matching_1000.txt")
-    g = text_to_graph("data/pw09_100.9.txt")
+    g = text_to_graph("data/matching_1000.txt")
+    # g = text_to_graph("data/pw09_100.9.txt")
     # text_to_graph("data/test.txt")
 
-    algo = "S"
+    algo = "SR"
     num_trials = 100
 
     # Accumuates values for each trial
@@ -170,6 +170,7 @@ def main():
             val = R(g)
 
         data.write(str(int(val)) + "\n")
+        print(val)
         vals += [val]
         if val > max_val:
             max_val = val
