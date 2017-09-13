@@ -59,7 +59,7 @@ def S(g):
     difference = S_helper(A, B, g)
     while True:
         #if there was no change after checking every node again, we break out of loop
-        print("delta:{}".format(difference))
+        # print("delta:{}".format(difference))
         if difference <= 0:
             break
         difference = S_helper(A, B, g)
@@ -80,7 +80,7 @@ def SR(g):
     difference = S_helper(A, B, g)
     while True:
         #if there was no change after checking every node again, we break out of loop
-        print("delta:{}".format(difference))
+        # print("delta:{}".format(difference))
         if difference <= 0:
             break
         difference = S_helper(A, B, g)
@@ -146,23 +146,35 @@ def main():
     g = text_to_graph("data/pw09_100.9.txt")
     # text_to_graph("data/test.txt")
 
-    num_trials = 1
+    algo = "S"
+    num_trials = 100
+
     # Accumuates values for each trial
     vals = []
     # tracks maxcut over several trials
     max_val = 0
+
+    data = open("data_" + algo + ".txt", "w+")
+
+    print("--- start --- ")
+    print("Running Algorithm {}".format(algo))
+    print("num_trials = {}".format(num_trials))
     
     # Simulate experiment over several trials
     for i in range(num_trials):
-        val = SR(g)
+        if algo == "SR":
+            val = SR(g)
+        elif algo == "S":
+            val = S(g)
+        else:
+            val = R(g)
+
+        data.write(str(int(val)) + "\n")
         vals += [val]
         if val > max_val:
             max_val = val
 
-    print("--- start --- ")
-    print("Running Algorithm {}".format(alg))    
-    print("num_trials = {}".format(num_trials))
-    
+    data.close()
     print("\t maximum:{}".format(max_val))
     print("\t average:{}".format(np.mean(np.array(vals))))
     print("---  end  ---")
