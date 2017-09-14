@@ -57,12 +57,15 @@ def S(g):
     #     val = random.randint(1, g.nodes)
 
     difference = S_helper(A, B, g)
+    i = 0
     while True:
         #if there was no change after checking every node again, we break out of loop
         # print("delta:{}".format(difference))
+        i += 1
         if difference <= 0:
             break
         difference = S_helper(A, B, g)
+    print(i)
     return cutSize(A, B, g)
 
 def SR(g):
@@ -78,12 +81,15 @@ def SR(g):
     randomPartition(A, B, g)
 
     difference = S_helper(A, B, g)
+    i = 0
     while True:
         #if there was no change after checking every node again, we break out of loop
+        i += 1
         # print("delta:{}".format(difference))
         if difference <= 0:
             break
         difference = S_helper(A, B, g)
+    print(i)
     return cutSize(A, B, g)
 
 
@@ -142,8 +148,8 @@ def main():
     np.set_printoptions(threshold='nan')
 
     # parse input graph
-    g = text_to_graph("data/matching_1000.txt")
-    # g = text_to_graph("data/pw09_100.9.txt")
+    # g = text_to_graph("data/matching_1000.txt")
+    g = text_to_graph("data/pw09_100.9.txt")
     # text_to_graph("data/test.txt")
 
     algo = "SR"

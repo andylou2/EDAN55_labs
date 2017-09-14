@@ -162,6 +162,12 @@ class MarkingTree:
             new_arr[i] = new_arr[j]
             new_arr[j] = temp
         return new_arr
+
+def expected(N):
+    c = 0.5772156649
+    n = (N+1)/4
+    return 2 * n * (math.log(n) + c)
+
 def main():
 
     # N = 1048575
@@ -169,8 +175,12 @@ def main():
     H = int(math.log(N+1, 2))
     T = 10
 
+    for x in range(1, 20):
+        n = (1<<x) - 1
+        print(n, expected(n))
+
     results = []
-    for j in range(18, 19):
+    for j in range(1, H):
         for i in range(T):
             m = MarkingTree(i, j)
             # m.show()
