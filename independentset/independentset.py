@@ -83,6 +83,6 @@ if __name__ == "__main__":
     alpha = MIS(G)
     
     print("MIS results")
-    print("\tfilename:\t{}".format(filename))
+    print("\tfilename:\t{}".format(args.filename))
     print("\talpha:\t\t{}".format(alpha))
 
