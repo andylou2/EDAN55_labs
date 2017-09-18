@@ -4,6 +4,8 @@ import os
 import argparse
 import networkx as nx
 
+counter = 0
+
 def read_graph(pathname):
     """
     DESC:   reads a graph using the lab's input format
@@ -33,6 +35,8 @@ def MIS(G):
     OUTPUT: MIS value alpha
     """
 
+    global counter
+    counter += 1
     # base case: V(G) = 0
     if G.nodes() == []:
         return 0
@@ -40,26 +44,33 @@ def MIS(G):
     # dict of degrees indexed by vertex
     degs = G.degree()
 
-    u = max(degs, key=degs.get)   # get lowest valued vertex with max degree
-
-    # loner nodes added at no penalty
-    if G.degree(u) == 0:
-        G0 = G.copy()
-        G0.remove_node(u)
-        return 1 + MIS(G0)
-
+    u = max(degs, key=degs.get)             # get vertex with max degree
     neighbors = G.neighbors(u) 
 
-    # include vertex u, thus excluding its neighbors
-    G1 = G.copy()
-    G1.remove_nodes_from(neighbors)
-    G1.remove_node(u)
-    
-    # exclude vertex u
-    G2 = G.copy()
-    G2.remove_node(u)
+    edges_to_u = G.edges(u)                 # saved for restoration
+    G.remove_node(u)
 
-    return max(1 + MIS(G1), MIS(G2))
+    # loner nodes added at no penalty
+    if len(neighbors) == 0:
+        alpha = 1 + MIS(G)
+        # restore graph
+        G.add_node(u)
+        G.add_edges_from(edges_to_u)
+        return alpha
+
+    exclude_u = MIS(G)
+
+    edges_to_neighbors = G.edges(neighbors) # saved for restoration
+    G.remove_nodes_from(neighbors)
+
+    include_u = 1 + MIS(G)
+
+    # restore graph
+    G.add_nodes_from([u] + neighbors)
+    G.add_edges_from(edges_to_u + edges_to_neighbors)
+
+
+    return max(include_u, exclude_u)
 
 if __name__ == "__main__":
 
@@ -83,6 +94,7 @@ if __name__ == "__main__":
     alpha = MIS(G)
     
     print("MIS results")
-    print("\tfilename:\t{}".format(args.filename))
-    print("\talpha:\t\t{}".format(alpha))
+    print("\tfilename\t\t:\t{}".format(args.filename))
+    print("\talpha\t\t\t:\t{}".format(alpha))
+    print("\tnum recursive calls\t:\t{}".format(counter))
 
