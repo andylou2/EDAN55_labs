@@ -156,7 +156,7 @@ if __name__ == "__main__":
             'R0': R0,
             'R1': R1,
             }
-    # run algorithm R0 to find size of largest independent set
+    # run algorithms to find size of largest independent set
     for alg in args.algorithm:
         counter = 0
         alpha = algorithms[alg](G)
