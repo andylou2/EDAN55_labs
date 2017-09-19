@@ -32,7 +32,6 @@ def R0(G):
     INPUT:  graph G
     OUTPUT: MIS value alpha
     """
-
     global counter
     counter += 1
 
@@ -139,6 +138,8 @@ def R2(G):
     OUTPUT: MIS value alpha
     """
 
+    #print G.nodes()
+    #print G.edges()
     global counter
     counter += 1
 
@@ -151,13 +152,13 @@ def R2(G):
 
     if 2 in degs.values():
         u = degs.keys()[degs.values().index(2)] # get vertex with deg = 2
+        # print('\tpicked\t:\t{}'.format(u))
     elif 1 in degs.values():
         u = degs.keys()[degs.values().index(1)] # get vertex with deg = 1
     else:
         u = max(degs, key=degs.get)             # get vertex with max degree
 
     neighbors = G.neighbors(u) 
-
     edges_to_u = G.edges(u)                     # saved for restoration
     G.remove_node(u)
 
@@ -165,13 +166,13 @@ def R2(G):
     # R2 mod: vertex u has two neighbors x,y and xy is an edge
     if len(neighbors) == 2:
         # neighbors of x & y without u (for R2)
-        neighbors_of_x_y = G.nodes(neighbors[0]) + G.nodes(neighbors[1])
-        print neighbors_of_x_y
+        neighbors_of_x_y = G.neighbors(neighbors[0]) + G.neighbors(neighbors[1])
 
         edges_to_neighbors = G.edges(neighbors) # saved for restoration excld. u
 
         # if xy is an edge, add u and remove x & y
-        if (neighbors[0],neighbors[1]) in G.edges():
+        if ((neighbors[0],neighbors[1]) in G.edges()
+                or (neighbors[1],neighbors[0]) in G.edges()):
             G.remove_nodes_from(neighbors)
             alpha = 1 + R2(G)
             # restore graph
@@ -186,8 +187,8 @@ def R2(G):
             z = u
             G.add_node(z)   
             # connect z to all of x & y neighbors, excluding u
-            #G.add_edges_from(zip([z for i in range(len(neighbors_of_x_y))],
-                                 #neighbors_of_x_y)) 
+            G.add_edges_from(zip([z for i in range(len(neighbors_of_x_y))],
+                                 neighbors_of_x_y)) 
 
             alpha = 1 + R2(G)
 
