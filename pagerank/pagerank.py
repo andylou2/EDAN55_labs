@@ -8,24 +8,24 @@ def read_graph(pathname):
     """
     DESC:   reads a graph using the lab's input format
     INPUT:  filename in data/
-    OUTPUT: graph G
+    OUTPUT: directed multigraph DG
     """
-
-    raise NotImplementedError
 
     print("reading file: {}".format(pathname))
     f = open(pathname, 'r')
     n = int(f.readline())                   # number of vertices
-    G = nx.Graph()
+    DG = nx.MultiDiGraph()
 
     for src in range(n):
-        G.add_node(src)                     # add a vertices
-        edges = str.split(f.readline()," ")[:-1]
-        for (dest, e) in enumerate(edges):  # add all edges
-            if e == '1':
-                G.add_edge(src, dest)
+        DG.add_node(src)                     # add a vertices
+        edges = [(str.split(e," ")) for
+                 e in str.split(f.readline().rstrip(),"   ")]
+        for e in edges:
+            src = int(e[0])
+            dst = int(e[1])
+            DG.add_edge(src, dst)
 
-    return G
+    return DG
 
 if __name__ == "__main__":
 
@@ -33,15 +33,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='PageRank Algorithm')
     parser.add_argument('--filename', '-f', nargs='?',
                         default='three.txt', help='filename')
+    parser.add_argument('-a', '--alpha', nargs='?',
+                        default=0.85, help='alpha - damping factor')
 
     args = parser.parse_args()
 
     filepath = os.path.join(os.getcwd(),'data',args.filename)
     
     # read graph
-    G = read_graph(filepath)
-    n = len(G.nodes())
-    m = len(G.edges())
+    print("damping factor:\t{}".format(args.alpha))
+    DG = read_graph(filepath)
+    n = len(DG.nodes())
+    m = len(DG.edges())
     print("num nodes:\t{}".format(n))
     print("num edges:\t{}".format(m))
 
