@@ -2,6 +2,7 @@
 import sys
 import os
 import argparse
+import random
 import networkx as nx
 
 def read_graph(pathname):
@@ -25,21 +26,58 @@ def read_graph(pathname):
 
     return DG
 
+def pagerank(DG, alpha, nSteps):
+    """
+    DESC:   simulate a surfer over a graph
+    INPUT:  Multiple Digraph DG
+            damping factor alpha
+            int nSteps for number of steps surfer takes
+    OUTPUT: dict outcome of visited vertices
+    """
+
+    outcome = {} 
+    start = 0       # starting node
+    curr = start    # current node it is on
+
+    for itr in range(nSteps):
+        # node has no outgoing edge, jump randomly
+        if ((random.random() < alpha) and
+            DG.out_degree(curr) != 0):
+
+            nxt = random.choice(DG.neighbors(curr))
+            try:
+                outcome[nxt] += 1
+            except KeyError:
+                outcome[nxt] = 1
+            curr = nxt
+        else:
+            nxt = random.choice(DG.nodes())
+            try:
+                outcome[nxt] += 1
+            except KeyError:
+                outcome[nxt] = 1
+            curr = nxt
+
+
+    return outcome 
+
 if __name__ == "__main__":
 
     # parse cmdline args
     parser = argparse.ArgumentParser(description='PageRank Algorithm')
     parser.add_argument('--filename', '-f', nargs='?',
                         default='three.txt', help='filename')
-    parser.add_argument('-a', '--alpha', nargs='?',
+    parser.add_argument('-a', '--alpha', nargs='?', type=float,
                         default=0.85, help='alpha - damping factor')
+    parser.add_argument('-s', '--steps', nargs='?', type=int,
+                        default=100,
+                        help='steps - # steps to run simulation')
 
     args = parser.parse_args()
 
     filepath = os.path.join(os.getcwd(),'data',args.filename)
     
     # read graph
-    print("damping factor:\t{}".format(args.alpha))
     DG = read_graph(filepath)
     n = len(DG.nodes())
     m = len(DG.edges())
@@ -47,3 +85,10 @@ if __name__ == "__main__":
     print("num nodes:\t{}".format(n))
     print("num edges:\t{}".format(m))
 
+
+    # simulate pagerank
+    print("Simulating pagerank...")
+    outcome = pagerank(DG, args.alpha, args.steps)
+    print("\tdamping factor:\t{}".format(args.alpha))
+    print("\tnSteps:\t{}".format(args.steps))
+    print("\toutcome:\t{}".format(outcome))
