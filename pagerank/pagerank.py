@@ -4,6 +4,7 @@ import os
 import argparse
 import random
 import networkx as nx
+import re
 
 def read_graph(pathname):
     """
@@ -15,14 +16,35 @@ def read_graph(pathname):
     n = int(f.readline())                   # number of vertices
     DG = nx.MultiDiGraph()
 
-    for src in range(n):
-        DG.add_node(src)                     # add a vertices
-        edges = [(str.split(e," ")) for
-                 e in str.split(f.readline().rstrip(),"   ")]
-        for e in edges:
-            src = int(e[0])
-            dst = int(e[1])
-            DG.add_edge(src, dst)
+    for i in range(n):
+        DG.add_node(i)
+
+    v = []
+    line = f.readline()
+    while not (line == ''):
+        nodes = re.split("\s", line)        # splits by all tabs and single spaces
+        for i in range(len(nodes)):
+            if nodes[i].isdigit():
+                v.append(int(nodes[i]))     # only taking integer nodes
+        for i in range(0, len(v) - 1, 2):   # adds the edge based on every 2 elements
+            DG.add_edge(v[i], v[i+1])
+
+        line = f.readline()
+        v = []
+
+    # for src in range(n):
+    #     DG.add_node(src)                     # add a vertices
+    #     line = f.readline()
+
+
+    f.close()
+
+        # edges = [(str.split(e," ")) for
+        #          e in str.split(f.readline().rstrip(),"  ")]
+        # for e in edges:
+        #     src = int(e[0])
+        #     dst = int(e[1])
+        #     DG.add_edge(src, dst)
 
     return DG
 
@@ -39,12 +61,12 @@ def pagerank(DG, alpha, nSteps):
     start = 0       # starting node
     curr = start    # current node it is on
 
+    outcome[curr] = 1
     for itr in range(nSteps):
         # node has no outgoing edge, jump randomly
-        if ((random.random() < alpha) and
+        if ((random.random() <= alpha) and
             DG.out_degree(curr) != 0):
-
-            nxt = random.choice(DG.neighbors(curr))
+            nxt = random.choice(DG.out_edges(curr))[1]
             try:
                 outcome[nxt] += 1
             except KeyError:
