@@ -7,6 +7,7 @@ import networkx as nx
 import re
 import operator
 import numpy as np
+import numpy.matlib
 
 def read_graph(pathname):
     """
@@ -34,19 +35,7 @@ def read_graph(pathname):
         line = f.readline()
         v = []
 
-    # for src in range(n):
-    #     DG.add_node(src)                     # add a vertices
-    #     line = f.readline()
-
-
     f.close()
-
-        # edges = [(str.split(e," ")) for
-        #          e in str.split(f.readline().rstrip(),"  ")]
-        # for e in edges:
-        #     src = int(e[0])
-        #     dst = int(e[1])
-        #     DG.add_edge(src, dst)
 
     return DG
 
@@ -88,9 +77,41 @@ def pagerank(DG, alpha, nSteps):
 
 
 def pagerank_matrix(DG, alpha, r):
+    """
+    DESC:   Calculate pagerank outcome percentages by
+            matrix multiplication
+    INPUT:  Directed Multigraph DG
+            damping factor alpha
+            int r for number times to multiply matrix
+    OUTPUT:  array p of outcome percentages
+    :param DG:
+    :param alpha:
+    :param r:
+    :return:
+    """
+    v = len(DG.nodes())
+    P = np.matlib.zeros((v, v))
+    p = np.matlib.zeros((1, v))
+    p[0,0] = 1
+    for i in range(0, v):
+        e = DG.out_degree(i)
+        if (e == 0):
+            P[i:] = 1.0/v
+        else:
+            for j in range(0, v):
+                P[i,j] = (1-alpha)/v
+                ej = DG.number_of_edges(i,j)
+                if (ej > 0):
+                    P[i,j] += (alpha*ej)/e
 
 
-    return 0
+    print(P)
+
+    for i in range(0, r):
+        p = p*P
+
+
+    return p
 
 
 
@@ -105,12 +126,15 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--steps', nargs='?', type=int,
                         default=100,
                         help='steps - # steps to run simulation')
+    parser.add_argument('-m', '--matrix', action='store_true',
+                        help='matrix - to run the matrix calculation')
 
     args = parser.parse_args()
 
     filepath = os.path.join(os.getcwd(),'data',args.filename)
     
     # read graph
+
     DG = read_graph(filepath)
     n = len(DG.nodes())
     m = len(DG.edges())
@@ -120,8 +144,12 @@ if __name__ == "__main__":
 
 
     # simulate pagerank
-    print("Simulating pagerank...")
-    outcome = pagerank(DG, args.alpha, args.steps)
+    if (args.matrix is not None):
+        print("Calculating pagerank...")
+        outcome = pagerank_matrix(DG, args.alpha, args.steps)
+    else:
+        print("Simulating pagerank...")
+        outcome = pagerank(DG, args.alpha, args.steps)
     print("\tdamping factor:\t{}".format(args.alpha))
     print("\tnSteps:\t{}".format(args.steps))
     print("\toutcome:\t{}".format(outcome))
