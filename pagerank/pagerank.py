@@ -58,6 +58,9 @@ def pagerank(DG, alpha, nSteps):
                 outcome[nxt] = 1
             curr = nxt
 
+    #calculate relative frequencies
+    for node in outcome:
+        outcome[node] = outcome[node] / nSteps
 
     return outcome 
 
