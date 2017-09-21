@@ -105,12 +105,12 @@ def pagerank_matrix(DG, alpha, r):
                     P[i,j] += (alpha*ej)/e
 
 
-    print(P)
-
     for i in range(0, r):
+
         p = p*P
 
-
+    #P10 = P * P * P * P * P * P * P * P * P * P
+    #print(P10)
     return p
 
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
 
 
     # simulate pagerank
-    if (args.matrix is not None):
+    if (args.matrix):
         print("Calculating pagerank...")
         outcome = pagerank_matrix(DG, args.alpha, args.steps)
     else:
