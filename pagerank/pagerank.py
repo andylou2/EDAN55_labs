@@ -10,8 +10,6 @@ def read_graph(pathname):
     INPUT:  filename in data/
     OUTPUT: directed multigraph DG
     """
-
-    print("reading file: {}".format(pathname))
     f = open(pathname, 'r')
     n = int(f.readline())                   # number of vertices
     DG = nx.MultiDiGraph()
@@ -45,6 +43,7 @@ if __name__ == "__main__":
     DG = read_graph(filepath)
     n = len(DG.nodes())
     m = len(DG.edges())
+    print("filename:\t{}".format(args.filename))
     print("num nodes:\t{}".format(n))
     print("num edges:\t{}".format(m))
 
