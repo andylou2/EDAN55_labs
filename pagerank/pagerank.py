@@ -104,14 +104,16 @@ def pagerank_matrix(DG, alpha, r):
                 if (ej > 0):
                     P[i,j] += (alpha*ej)/e
 
-
-    print(P)
-
     for i in range(0, r):
         p = p*P
 
+    outcome = {}
+    for i in range(v):
+        outcome[i] = p.item(i)
 
-    return p
+    sorted_outcome = sorted(outcome.items(), key=operator.itemgetter(1), reverse=True)
+
+    return sorted_outcome
 
 
 
