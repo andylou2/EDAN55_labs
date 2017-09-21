@@ -5,6 +5,8 @@ import argparse
 import random
 import networkx as nx
 import re
+import operator
+import numpy as np
 
 def read_graph(pathname):
     """
@@ -64,27 +66,33 @@ def pagerank(DG, alpha, nSteps):
     outcome[curr] = 1
     for itr in range(nSteps):
         # node has no outgoing edge, jump randomly
-        if ((random.random() <= alpha) and
+        if ((random.random() < alpha) and
             DG.out_degree(curr) != 0):
             nxt = random.choice(DG.out_edges(curr))[1]
-            try:
-                outcome[nxt] += 1
-            except KeyError:
-                outcome[nxt] = 1
-            curr = nxt
+
         else:
             nxt = random.choice(DG.nodes())
-            try:
-                outcome[nxt] += 1
-            except KeyError:
-                outcome[nxt] = 1
-            curr = nxt
+
+        try:
+            outcome[nxt] += 1
+        except KeyError:
+            outcome[nxt] = 1
+        curr = nxt
 
     #calculate relative frequencies
     for node in outcome:
         outcome[node] = outcome[node] / (nSteps + 0.0)
 
-    return outcome 
+    sorted_outcome = sorted(outcome.items(), key=operator.itemgetter(1), reverse=True)
+    return sorted_outcome
+
+
+def pagerank_matrix(DG, alpha, r):
+
+
+    return 0
+
+
 
 if __name__ == "__main__":
 
