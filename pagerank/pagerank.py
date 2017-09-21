@@ -106,12 +106,17 @@ def pagerank_matrix(DG, alpha, r):
 
 
     for i in range(0, r):
-
         p = p*P
-
     #P10 = P * P * P * P * P * P * P * P * P * P
     #print(P10)
-    return p
+
+    outcome = {}
+    for i in range(v):
+        outcome[i] = p.item(i)
+
+    sorted_outcome = sorted(outcome.items(), key=operator.itemgetter(1), reverse=True)
+
+    return sorted_outcome
 
 
 
