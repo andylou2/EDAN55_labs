@@ -4,19 +4,20 @@ import os
 import argparse
 import random
 import networkx as nx
+import numpy as np
 
 def read_graphs(pathname):
     """
     DESC:   reads graph G and its associated treewidth decomposition T
             using the lab's input format
     INPUT:  filename data/*.{gr|td}
-    OUTPUT: graph G, treewidth T
+    OUTPUT: graph G, tree decomposition T, treewidth tw
     """
 
     G = read_G_ (pathname + '.gr')
-    T = read_T_ (pathname + '.td')
+    T,tw = read_T_ (pathname + '.td')
 
-    return G,T
+    return G, T, tw
 
 def read_G_ (pathname):
     """
@@ -57,7 +58,7 @@ def read_T_ (pathname):
     """
     DESC:   helper to read tree T
     INPUT:  filename data/*.td
-    OUTPUT: tree T
+    OUTPUT: tree T, treewidth tw
     """
     f = open(pathname, 'r')
     T = nx.Graph()
@@ -91,20 +92,24 @@ def read_T_ (pathname):
 
     f.close()
 
-    return T
+    return T, size-1
 
 def root_tree(G):
     raise NotImplementedError
 
-def MIS(T):
+def MIS(T, tw):
     """
     DESC:   Calculate MIS using K&T algorithm
     INPUT:  tree T in dictionary format
+            treewidth tw 
             assumption: tree T rooted at 1
     OUTPUT: alpha MIS value
     """
 
     alpha = 0
+    n_T = len(T.keys())             # number of bags
+    n_W = 2**(tw+1)                 # 
+    dp = np.full((n_T,n_W), np.inf)
 
     #################################################
     #  create order to process from leaves to root  #
@@ -129,6 +134,15 @@ def MIS(T):
     #          calculate MIS from leaves up         #
     #################################################
 
+    while processing_line != []:
+        curr = processing_line.pop()
+        if T[curr]['children'] == []:
+            # is leaf
+            #for subset in list(it.powerset(T["vertices"])):
+            #    dp[curr][subset] = len(subset)
+            pass 
+
+
     return alpha
 
 if __name__ == "__main__":
@@ -144,7 +158,7 @@ if __name__ == "__main__":
     
     # read graphs *.{gr|td}
 
-    G,T = read_graphs(filepath)
+    G, T, tw = read_graphs(filepath)
     g_n = len(G.nodes())
     g_m = len(G.edges())
     t_n = len(T.nodes())
@@ -154,6 +168,7 @@ if __name__ == "__main__":
     print("\tnum nodes:\t{}".format(g_n))
     print("\tnum edges:\t{}".format(g_m))
     print("T")
+    print("\ttreewidth:\t{}".format(tw))
     print("\tnum nodes:\t{}".format(t_n))
     print("\tnum edges:\t{}".format(t_m))
 
@@ -193,7 +208,7 @@ if __name__ == "__main__":
                 'vertices': [3]
                 }
             }
-    alpha = MIS(T_dict)
+    alpha = MIS(T_dict, tw)
 
     print("MIS alpha:{}".format(alpha))
 
