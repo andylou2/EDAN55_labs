@@ -93,6 +93,44 @@ def read_T_ (pathname):
 
     return T
 
+def root_tree(G):
+    raise NotImplementedError
+
+def MIS(T):
+    """
+    DESC:   Calculate MIS using K&T algorithm
+    INPUT:  tree T in dictionary format
+            assumption: tree T rooted at 1
+    OUTPUT: alpha MIS value
+    """
+
+    alpha = 0
+
+    #################################################
+    #  create order to process from leaves to root  #
+    #################################################
+
+    # stack structure - leaves at top of the stack
+    processing_line = []
+    # queue structure
+    tmp_line = []
+
+    root = 1
+    processing_line.append(root)
+    tmp_line.insert(0, root)
+
+    while tmp_line != []:
+        curr = tmp_line.pop()
+        for child in T[curr]['children']:
+            processing_line.append(child) # add bags index (int)
+            tmp_line.insert(0, child)
+
+    #################################################
+    #          calculate MIS from leaves up         #
+    #################################################
+
+    return alpha
+
 if __name__ == "__main__":
 
     # parse cmdline args
@@ -118,4 +156,44 @@ if __name__ == "__main__":
     print("T")
     print("\tnum nodes:\t{}".format(t_n))
     print("\tnum edges:\t{}".format(t_m))
+
+    # T_dict = root_tree(T)
+
+    T_dict = {
+            1: {
+                'children': [2,3,4],
+                'vertices': [1]
+                },
+            2: {
+                'children': [5],
+                'vertices': [2]
+                },
+            3: {
+                'children': [7,8],
+                'vertices': [2]
+                },
+            4: {
+                'children': [],
+                'vertices': [2]
+                },
+            5: {
+                'children': [6],
+                'vertices': [2]
+                },
+            6: {
+                'children': [],
+                'vertices': [3]
+                },
+            7: {
+                'children': [],
+                'vertices': [3]
+                },
+            8: {
+                'children': [],
+                'vertices': [3]
+                }
+            }
+    alpha = MIS(T_dict)
+
+    print("MIS alpha:{}".format(alpha))
 
