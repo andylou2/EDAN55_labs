@@ -5,6 +5,7 @@ import argparse
 import random
 import networkx as nx
 import numpy as np
+import json
 
 def read_graphs(pathname):
     """
@@ -145,6 +146,28 @@ def MIS(T, tw):
 
     return alpha
 
+
+def root_tree(t):
+    """
+    :param t: tree
+    :return: dictionary of dictionary holding the children, bag contents, and table of each node in the tree
+    """
+    tree_data = {}
+    tree = nx.dfs_tree(T, 1)
+    for i in range(1, len(t.nodes()) + 1):
+        tree_data[i] = {}
+        print(tree.neighbors(i))
+        tree_data[i]['children'] = tree.neighbors(i)                         # returns array of the ith nodes children
+        tree_data[i]['vertices'] = parse_contents(i, t)                      # parses the node contents from int to string
+        tree_data[i]['table'] = np.zeros(2**len(tree_data[i]['vertices']) + 1).tolist()
+    return tree, tree_data
+
+
+def parse_contents(i, t):
+    s = t.nodes(data=True)[i - 1][1]['contents']
+    return list(map(lambda x: int(x), str.split(s, " ")))
+
+
 if __name__ == "__main__":
 
     # parse cmdline args
@@ -211,4 +234,3 @@ if __name__ == "__main__":
     alpha = MIS(T_dict, tw)
 
     print("MIS alpha:{}".format(alpha))
-
