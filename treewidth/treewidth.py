@@ -1,4 +1,3 @@
-# treewidth.py
 import sys
 import os
 import argparse
@@ -6,6 +5,7 @@ import random
 import networkx as nx
 import numpy as np
 import json
+import pprint
 
 def read_graphs(pathname):
     """
@@ -95,13 +95,35 @@ def read_T_ (pathname):
 
     return T, size-1
 
-def root_tree(G):
-    raise NotImplementedError
+def root_tree(t):
+    """
+    :param t:   tree
+    :return:    dictionary of dictionary holding the children, bag contents,
+                table of each node in the tree
+    """
+    tree_data = {}
+    tree = nx.dfs_tree(T, 1)
+    for i in range(1, len(t.nodes()) + 1):
+        tree_data[i] = {}
+        
+        # returns array of the ith nodes children
+        tree_data[i]['children'] = tree.neighbors(i)
+        # parses the node contents from int to string
+        tree_data[i]['vertices'] = parse_contents_(i, t)                      
+        tree_data[i]['dp'] = np.full(2**len(tree_data[i]['vertices']) +
+                                1, -1).tolist()
+    return tree, tree_data
 
-def MIS(T, tw):
+
+def parse_contents_(i, t):
+    s = t.nodes(data=True)[i - 1][1]['contents']
+    return list(map(lambda x: int(x), str.split(s, " ")))
+
+def MIS(G, T, tw):
     """
     DESC:   Calculate MIS using K&T algorithm
-    INPUT:  tree T in dictionary format
+    INPUT:  original graph G networkx object
+            tree T in dictionary format
             treewidth tw 
             assumption: tree T rooted at 1
     OUTPUT: alpha MIS value
@@ -109,8 +131,8 @@ def MIS(T, tw):
 
     alpha = 0
     n_T = len(T.keys())             # number of bags
-    n_W = 2**(tw+1)                 # 
-    dp = np.full((n_T,n_W), np.inf)
+    n_W = 2**(tw+1)                 # max subsets of each bag
+    # dp table stored in tree T under 'dp' key
 
     #################################################
     #  create order to process from leaves to root  #
@@ -136,44 +158,35 @@ def MIS(T, tw):
     #################################################
 
     while processing_line != []:
-        curr = processing_line.pop()
-        if T[curr]['children'] == []:
+        curr_bag = processing_line.pop()
+        if T[curr_bag]['children'] == []:
             # is leaf
-            #for subset in list(it.powerset(T["vertices"])):
-            #    dp[curr][subset] = len(subset)
-            pass 
+            for iset in isets(T["vertices"], G):
+                # memoize local MIS
+                dp[curr_bag][iset] = bin(iset).count('1')
 
+        else:
+            # internal node
+            pass
+
+    # get T_r(U), where U is independent subset of bag Vr
+    alpha = max(T["dp"])
 
     return alpha
 
-
-def root_tree(t):
-    """
-    :param t: tree
-    :return: dictionary of dictionary holding the children, bag contents, and table of each node in the tree
-    """
-    tree_data = {}
-    tree = nx.dfs_tree(T, 1)
-    for i in range(1, len(t.nodes()) + 1):
-        tree_data[i] = {}
-        print(tree.neighbors(i))
-        tree_data[i]['children'] = tree.neighbors(i)                         # returns array of the ith nodes children
-        tree_data[i]['vertices'] = parse_contents(i, t)                      # parses the node contents from int to string
-        tree_data[i]['table'] = np.zeros(2**len(tree_data[i]['vertices']) + 1).tolist()
-    return tree, tree_data
-
-
-def parse_contents(i, t):
-    s = t.nodes(data=True)[i - 1][1]['contents']
-    return list(map(lambda x: int(x), str.split(s, " ")))
-
+def isets(bag, G):
+    raise NotImplementedError
 
 if __name__ == "__main__":
 
+    # pretty printer
+    pp = pprint.PrettyPrinter(indent=4)
     # parse cmdline args
     parser = argparse.ArgumentParser(description='Treewidth Algorithm')
-    parser.add_argument('--filename', '-f', nargs='?',
+    parser.add_argument('-f', '--filename', nargs='?',
                         default='eppstein', help='filename')
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='debug mode: print the tree')
 
     args = parser.parse_args()
 
@@ -195,42 +208,11 @@ if __name__ == "__main__":
     print("\tnum nodes:\t{}".format(t_n))
     print("\tnum edges:\t{}".format(t_m))
 
-    # T_dict = root_tree(T)
+    _, T_dict = root_tree(T)
 
-    T_dict = {
-            1: {
-                'children': [2,3,4],
-                'vertices': [1]
-                },
-            2: {
-                'children': [5],
-                'vertices': [2]
-                },
-            3: {
-                'children': [7,8],
-                'vertices': [2]
-                },
-            4: {
-                'children': [],
-                'vertices': [2]
-                },
-            5: {
-                'children': [6],
-                'vertices': [2]
-                },
-            6: {
-                'children': [],
-                'vertices': [3]
-                },
-            7: {
-                'children': [],
-                'vertices': [3]
-                },
-            8: {
-                'children': [],
-                'vertices': [3]
-                }
-            }
-    alpha = MIS(T_dict, tw)
+    if (args.debug): 
+        pp.pprint(T_dict)
+
+    alpha = MIS(G, T_dict, tw)
 
     print("MIS alpha:{}".format(alpha))
