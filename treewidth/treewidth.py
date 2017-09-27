@@ -157,20 +157,31 @@ def MIS(G, T, tw):
     #          calculate MIS from leaves up         #
     #################################################
 
+    print("processing order {}".format(processing_line))
     while processing_line != []:
         curr_bag = processing_line.pop()
         if T[curr_bag]['children'] == []:
             # is leaf
             for iset in isets(T[curr_bag]["vertices"], G):
                 # memoize local MIS
-                dp[curr_bag][iset] = bin(iset).count('1')
+                T[curr_bag]["dp"][iset] = bin(iset).count('1')
+
+            print("leaf {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
 
         else:
             # internal node
-            for iset in isets(T[curr_bag]["vertices"], G):
+            v = T[curr_bag]["vertices"]
+            c = T[curr_bag]["children"]
+
+            for iset in isets(v, G):
                 for child in T[curr_bag]["children"]:
-                    dp[curr_bag][iset] = (bin(iset).count('1') +
-                                         max(T[child]["dp"]))
+                    c = T[child]["vertices"]
+
+                    for c_iset in iset(c, G):
+                        # check that U_i ^ V_t = U ^ V_t_i
+                        if :
+                            T[curr_bag]["dp"][iset] = (bin(iset).count('1') +
+                                                      max(T[child]["dp"]))
 
     #################################################
     #        return Max Independent Set (MIS)       #
@@ -195,7 +206,7 @@ def isets(bag, G):
     return list(filter(lambda x: is_independent(x, G), ind_sets))
 
 def is_independent(set, G):
-    print("set:{}".format(set))
+    # print("set:{}".format(set))
     if set != 0 and ((set & (set - 1)) == 0):
         return True
 
@@ -207,7 +218,7 @@ def is_independent(set, G):
         i += 1
         set = set >> 1
 
-    print("indicies_to_check:{}".format(indicies_to_check))
+    # print("indicies_to_check:{}".format(indicies_to_check))
     for j in range(len(indicies_to_check)):
         for k in range(len(indicies_to_check)):
             if (not j == k) and G.has_edge(indicies_to_check[j], indicies_to_check[k]):
@@ -252,41 +263,40 @@ if __name__ == "__main__":
 
 
 
-    T_dict = {
-            1: {
-                'children': [2,3,4],
-                'vertices': [1]
-                },
-            2: {
-                'children': [5],
-                'vertices': [2]
-                },
-            3: {
-                'children': [7,8],
-                'vertices': [2]
-                },
-            4: {
-                'children': [],
-                'vertices': [2]
-                },
-            5: {
-                'children': [6],
-                'vertices': [2]
-                },
-            6: {
-                'children': [],
-                'vertices': [3]
-                },
-            7: {
-                'children': [],
-                'vertices': [3]
-                },
-            8: {
-                'children': [],
-                'vertices': [3]
-                }
-            }
-    alpha = MIS(T_dict, tw)
+    # T_dict = {
+            # 1: {
+                # 'children': [2,3,4],
+                # 'vertices': [1]
+                # },
+            # 2: {
+                # 'children': [5],
+                # 'vertices': [2]
+                # },
+            # 3: {
+                # 'children': [7,8],
+                # 'vertices': [2]
+                # },
+            # 4: {
+                # 'children': [],
+                # 'vertices': [2]
+                # },
+            # 5: {
+                # 'children': [6],
+                # 'vertices': [2]
+                # },
+            # 6: {
+                # 'children': [],
+                # 'vertices': [3]
+                # },
+            # 7: {
+                # 'children': [],
+                # 'vertices': [3]
+                # },
+            # 8: {
+                # 'children': [],
+                # 'vertices': [3]
+                # }
+            # }
 
     _, T_dict = root_tree(T)
 
@@ -294,5 +304,8 @@ if __name__ == "__main__":
         pp.pprint(T_dict)
 
     alpha = MIS(G, T_dict, tw)
+
+    if (args.debug): 
+        pp.pprint(T_dict)
 
     print("MIS alpha:{}".format(alpha))
