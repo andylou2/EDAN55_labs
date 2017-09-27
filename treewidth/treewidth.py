@@ -173,17 +173,26 @@ def MIS(G, T, tw):
             v_t = T[curr_bag]["vertices"]
 
             for iset in isets(v_t, G):
+                w = bin(iset).count('1')
+                print("w: {}".format(w))
                 u = parse_bits(v_t, iset)
                 for child in T[curr_bag]["children"]:
                     v_t_i = T[child]["vertices"]
 
+                    temp = []
                     for c_iset in T[child]['dp']:
+
                         # check that U_i ^ V_t = U ^ V_t_i
                         u_i = parse_bits(v_t_i, c_iset)
                         if c_iset != -1 and len(list(filter(lambda x: x in v_t, u_i))) == len(list(filter(lambda x: x in v_t_i, u))):
-                            T[curr_bag]["dp"][iset] = (bin(iset).count('1') +
-                                                      max(T[child]["dp"]) - len(list(filter(lambda x: x in u, u_i))))
-
+                            temp.append((w + c_iset - len(list(filter(lambda x: x in u, u_i)))))
+                    print("temp:{}".format(temp))
+                    # if (len(temp) == 0):
+                    #     T[curr_bag]["dp"][iset] = []
+                    # else:
+                    T[curr_bag]["dp"][iset] = max(temp)
+            print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
+            # pass
     #################################################
     #        return Max Independent Set (MIS)       #
     #################################################
@@ -227,7 +236,19 @@ def is_independent(set, G):
 
     return True
 
+def parse_bits(vertex_set, iset):
+    indicies_to_check = []
+    i = 1
+    while iset > 0:
+        if iset % 2 == 1:
+            indicies_to_check.append(i)
+        i += 1
+        iset = iset >> 1
 
+    vertices = []
+    for j in range(len(indicies_to_check)):
+        vertices.append(vertex_set[indicies_to_check[j] - 1])
+    return vertices
 
 
 
@@ -299,14 +320,15 @@ if __name__ == "__main__":
                 # }
             # }
 
+
     _, T_dict = root_tree(T)
 
-    if (args.debug): 
+    if (args.debug):
         pp.pprint(T_dict)
 
     alpha = MIS(G, T_dict, tw)
 
-    if (args.debug): 
+    if (args.debug):
         pp.pprint(T_dict)
 
     print("MIS alpha:{}".format(alpha))
