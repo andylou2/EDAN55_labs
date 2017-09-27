@@ -170,18 +170,19 @@ def MIS(G, T, tw):
 
         else:
             # internal node
-            v = T[curr_bag]["vertices"]
-            c = T[curr_bag]["children"]
+            v_t = T[curr_bag]["vertices"]
 
-            for iset in isets(v, G):
+            for iset in isets(v_t, G):
+                u = parse_bits(v_t, iset)
                 for child in T[curr_bag]["children"]:
-                    c = T[child]["vertices"]
+                    v_t_i = T[child]["vertices"]
 
-                    for c_iset in iset(c, G):
+                    for c_iset in T[child]['dp']:
                         # check that U_i ^ V_t = U ^ V_t_i
-                        if :
+                        u_i = parse_bits(v_t_i, c_iset)
+                        if c_iset != -1 and len(list(filter(lambda x: x in v_t, u_i))) == len(list(filter(lambda x: x in v_t_i, u))):
                             T[curr_bag]["dp"][iset] = (bin(iset).count('1') +
-                                                      max(T[child]["dp"]))
+                                                      max(T[child]["dp"]) - len(list(filter(lambda x: x in u, u_i))))
 
     #################################################
     #        return Max Independent Set (MIS)       #
