@@ -177,7 +177,7 @@ def MIS(G, T, tw):
     #################################################
 
     # get T_r(U), where U is independent subset of bag Vr
-    alpha = max(T[1]["dp"])
+    alpha = max(T[root]["dp"])
 
     return alpha
 
