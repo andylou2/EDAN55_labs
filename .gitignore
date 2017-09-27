@@ -3,3 +3,5 @@
 *.out
 *.pdf
 vc.tex
+.idea/
+*.pyc
