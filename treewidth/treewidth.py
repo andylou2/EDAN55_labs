@@ -161,16 +161,23 @@ def MIS(G, T, tw):
         curr_bag = processing_line.pop()
         if T[curr_bag]['children'] == []:
             # is leaf
-            for iset in isets(T["vertices"], G):
+            for iset in isets(T[curr_bag]["vertices"], G):
                 # memoize local MIS
                 dp[curr_bag][iset] = bin(iset).count('1')
 
         else:
             # internal node
-            pass
+            for iset in isets(T[curr_bag]["vertices"], G):
+                for child in T[curr_bag]["children"]:
+                    dp[curr_bag][iset] = (bin(iset).count('1') +
+                                         max(T[child]["dp"]))
+
+    #################################################
+    #        return Max Independent Set (MIS)       #
+    #################################################
 
     # get T_r(U), where U is independent subset of bag Vr
-    alpha = max(T["dp"])
+    alpha = max(T[1]["dp"])
 
     return alpha
 
