@@ -165,7 +165,39 @@ def root_tree(t):
 
 def parse_contents(i, t):
     s = t.nodes(data=True)[i - 1][1]['contents']
+    if s == "":
+        return []
     return list(map(lambda x: int(x), str.split(s, " ")))
+
+
+def isets(bag, G):
+    s = len(bag)
+    ind_sets = np.arange(0, 2**s)
+    return list(filter(lambda x: is_independent(x, G), ind_sets))
+
+def is_independent(set, G):
+    print("set:{}".format(set))
+    if set != 0 and ((set & (set - 1)) == 0):
+        return True
+
+    indicies_to_check = []
+    i = 1
+    while set > 0:
+        if set % 2 == 1:
+            indicies_to_check.append(i)
+        i += 1
+        set = set >> 1
+
+    print("indicies_to_check:{}".format(indicies_to_check))
+    for j in range(len(indicies_to_check)):
+        for k in range(len(indicies_to_check)):
+            if (not j == k) and G.has_edge(indicies_to_check[j], indicies_to_check[k]):
+                return False
+
+    return True
+
+
+
 
 
 if __name__ == "__main__":
@@ -195,7 +227,15 @@ if __name__ == "__main__":
     print("\tnum nodes:\t{}".format(t_n))
     print("\tnum edges:\t{}".format(t_m))
 
-    # T_dict = root_tree(T)
+    t, Test_dict = root_tree(T)
+
+    for i in range(1, len(Test_dict) + 1):
+        tmp = isets(Test_dict[i]['vertices'], G)
+        print("independent_Sets: {}".format(tmp))
+
+
+
+
 
     T_dict = {
             1: {
