@@ -190,9 +190,6 @@ def parse_contents(i, t):
 
 
 def isets(bag, G):
-    raise NotImplementedError
-
-def isets(bag, G):
     s = len(bag)
     ind_sets = np.arange(0, 2**s)
     return list(filter(lambda x: is_independent(x, G), ind_sets))
