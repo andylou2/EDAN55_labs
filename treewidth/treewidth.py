@@ -171,26 +171,40 @@ def MIS(G, T, tw):
         else:
             # internal node
             v_t = T[curr_bag]["vertices"]
+            print("internal bag {}".format(curr_bag))
+            print("bag contents {}".format(v_t))
 
+            # loop over independent set U of current bag
             for iset in isets(v_t, G):
                 w = bin(iset).count('1')
-                print("w: {}".format(w))
                 u = parse_bits(v_t, iset)
+
+                print("\tw: {}\tu:{}\n".format(w, u))
+
+                # calculate summation portion over children
                 for child in T[curr_bag]["children"]:
+                    print("\tchild bag {}".format(child))
                     v_t_i = T[child]["vertices"]
 
-                    temp = []
-                    for c_iset in T[child]['dp']:
+                    sub_MIS = []
 
-                        # check that U_i ^ V_t = U ^ V_t_i
-                        u_i = parse_bits(v_t_i, c_iset)
-                        if c_iset != -1 and len(list(filter(lambda x: x in v_t, u_i))) == len(list(filter(lambda x: x in v_t_i, u))):
-                            temp.append((w + len(u_i) - len(list(filter(lambda x: x in u, u_i)))))
-                    print("temp:{}".format(temp))
-                    if (len(temp) == 0):
-                        T[curr_bag]["dp"][iset] = 0
-                    else:
-                        T[curr_bag]["dp"][iset] = max(temp)
+                    # loop over independent set U_i
+                    for c_iset in T[child]['dp']:
+                        # condition 2: check U_i is independent
+                        if c_iset != -1:
+                            u_i = parse_bits(v_t_i, c_iset)
+
+                            # condition 1: # check that U_i ^ V_t = U ^ V_t_i
+                            if len(list(filter(lambda x: x in v_t, u_i))) == \
+                                len(list(filter(lambda x: x in v_t_i, u))):
+                                sub_MIS.append(w+(len(u_i) - len(list(filter(lambda x: x in u, u_i)))))
+
+                    print("\tsub_MIS:{}".format(sub_MIS))
+                    # if (len(temp) == 0):
+                    #     T[curr_bag]["dp"][iset] = []
+                    # else:
+                    T[curr_bag]["dp"][iset] = max(sub_MIS)
+
             print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
             # pass
     #################################################
