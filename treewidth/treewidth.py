@@ -30,7 +30,7 @@ def read_G_ (pathname):
     G = nx.Graph()
 
     # build graph G
-    line = f.readline()
+    line = f.readline().rstrip().lstrip()
 
     while not (line == ''):
         if line[0] == 'c':
@@ -40,12 +40,16 @@ def read_G_ (pathname):
             # problem descriptor
             _, _, n, m = str.split(line, " ")
             n, m = map(int, [n, m])
+
+            # add nodes as int indexed from [1,..., n]
+            G.add_nodes_from(np.arange(1, n + 1))
         else:
             # edge
             src, dest = map(int, str.split(line," "))
+            assert(src <= n and dest <= n)
             G.add_edge(src, dest)
 
-        line = f.readline().rstrip()
+        line = f.readline().rstrip().lstrip()
 
     # error checking
     assert n == len(G.nodes()), 'error in read_G_(): incorrect num nodes'
@@ -65,7 +69,7 @@ def read_T_ (pathname):
     T = nx.Graph()
 
     # build tree T
-    line = f.readline()
+    line = f.readline().rstrip().lstrip()
 
     while not (line == ''):
         if line[0] == 'c':
@@ -78,15 +82,16 @@ def read_T_ (pathname):
 
         elif line[0] == 'b':
             # contents of each bag
-            bag_idx = int(line[2])
-            T.add_node(bag_idx,contents=line[4:])
+            tokens = str.split(line, " ")
+            bag_idx = int(tokens[1])
+            T.add_node(bag_idx,contents=[int(token) for token in tokens[2:]])
             
         else:
             # edge
             src, dest = map(int, str.split(line," "))
             T.add_edge(src, dest)
 
-        line = f.readline().rstrip()
+        line = f.readline().rstrip().lstrip()
 
     # error checking
     assert n_bags == len(T.nodes()), 'error in read_T_(): incorrect num bags'
@@ -109,30 +114,30 @@ def root_tree(t):
         # returns array of the ith nodes children
         tree_data[i]['children'] = tree.neighbors(i)
         # parses the node contents from int to string
-        tree_data[i]['vertices'] = parse_contents_(i, t)                      
-        tree_data[i]['dp'] = np.full(2**len(tree_data[i]['vertices']) +
-                                1, -1).tolist()
+        tree_data[i]['vertices'] = t.nodes(data=True)[i-1][1]['contents'] #parse_contents_(i, t)
+        tree_data[i]['dp'] = np.full(2**len(tree_data[i]['vertices']), -1).tolist()
     return tree, tree_data
 
 
-def parse_contents_(i, t):
-    s = t.nodes(data=True)[i - 1][1]['contents']
-    return list(map(lambda x: int(x), str.split(s, " ")))
+# def parse_contents_(i, t):
+#     s = t.nodes(data=True)[i - 1][1]['contents']
+#     if s == '':
+#         return []
+#     return list(map(lambda x: int(x), str.split(s, " ")))
 
-def MIS(G, T, tw, debug=False):
+def MIS(G, T_dict, tw, T, debug=False):
     """
     DESC:   Calculate MIS using K&T algorithm
     INPUT:  original graph G networkx object
-            tree T in dictionary format
-            treewidth tw 
+            tree T_dict in dictionary format
+            treewidth tw
+            tree T networkx object
             debug flag for print statements debugging
             assumption: tree T rooted at 1
     OUTPUT: alpha MIS value
     """
 
     alpha = 0
-    n_T = len(T.keys())             # number of bags
-    n_W = 2**(tw+1)                 # max subsets of each bag
     # dp table stored in tree T under 'dp' key
 
     #################################################
@@ -140,49 +145,44 @@ def MIS(G, T, tw, debug=False):
     #################################################
 
     # stack structure - leaves at top of the stack
-    processing_line = []
+    processing_stack = []
     # queue structure
-    tmp_line = []
+    tmp_queue = []
 
     root = 1
-    processing_line.append(root)
-    tmp_line.insert(0, root)
-
-    while tmp_line != []:
-        curr = tmp_line.pop()
-        for child in T[curr]['children']:
-            processing_line.append(child) # add bags index (int)
-            tmp_line.insert(0, child)
 
     #################################################
     #          calculate MIS from leaves up         #
     #################################################
 
     if debug:
-        print("processing order {}".format(processing_line))
-    while processing_line != []:
-        curr_bag = processing_line.pop()
-        if T[curr_bag]['children'] == []:
+        print("processing order {}".format(processing_stack))
+
+    # post-order for processing leaves before parent
+    processing_stack = list(nx.dfs_postorder_nodes(T, root))
+    # processing_stack = [processing_stack[0]]
+    for curr_bag in processing_stack:
+        if T_dict[curr_bag]['children'] == []:
             # is leaf
-            for iset in isets(T[curr_bag]["vertices"], G):
+            for u_binary in isets(T_dict[curr_bag]["vertices"], G):
                 # memoize local MIS
-                T[curr_bag]["dp"][iset] = bin(iset).count('1')
+                T_dict[curr_bag]["dp"][u_binary] = bin(u_binary).count('1')
 
             if debug:
-                print("leaf {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
+                print("leaf {} dp:\t{}".format(curr_bag, T_dict[curr_bag]["dp"]))
 
         else:
             # internal node
-            v_t = T[curr_bag]["vertices"]
+            v_t = T_dict[curr_bag]["vertices"]
 
             if debug:
                 print("internal bag {}".format(curr_bag))
                 print("bag contents {}".format(v_t))
 
             # loop over independent set U of current bag
-            for iset in isets(v_t, G):
-                w = bin(iset).count('1')
-                u = parse_bits(v_t, iset)
+            for u_binary in isets(v_t, G):
+                w = bin(u_binary).count('1')
+                u = parse_bits(v_t, u_binary)           # TODO: maybe need to sort v_t
 
                 if debug:
                     print("\tw: {}\tu:{}".format(w, u))
@@ -190,60 +190,61 @@ def MIS(G, T, tw, debug=False):
                 MIS_over_sum_child = 0
 
                 # calculate summation portion over children
-                for child in T[curr_bag]["children"]:
+                for child in T_dict[curr_bag]["children"]:
                     if debug:
                         print("\t\tchild bag {}".format(child))
-                    v_t_i = T[child]["vertices"]
+                    v_t_i = T_dict[child]["vertices"]
 
                     sub_MIS = []
 
                     # loop over independent set U_i
-
-                    for idx, c_iset in enumerate(T[child]['dp']):
+                    for u_i_binary, c_iset in enumerate(T_dict[child]['dp']):
                         # condition 2: check U_i is independent
                         if c_iset != -1:
-                            u_i = parse_bits(v_t_i, idx)
+                            u_i = parse_bits(v_t_i, u_i_binary)     # TODO: maybe need to sort v_t_i
 
+                            u_i_intersect_v_t = list(filter(lambda x: x in v_t, u_i))
+                            v_t_i_intersect_u =list(filter(lambda x: x in v_t_i, u))
+                            if debug:
+                                print("\t\t\tu_i intersects v_t: {}".format(u_i_intersect_v_t))
+                                print("\t\t\tv_t_i intersects u: {}".format(v_t_i_intersect_u))
                             # condition 1: # check that U_i ^ V_t = U ^ V_t_i
-                            if list(filter(lambda x: x in v_t, u_i)) == \
-                                list(filter(lambda x: x in v_t_i, u)):
-
+                            if u_i_intersect_v_t == v_t_i_intersect_u:
                                 sub_MIS.append((c_iset - len(list(filter(lambda x: x in u, u_i)))))
+                    # end loop over independentset U_i
 
-
-                    MIS_over_sum_child += max(sub_MIS)
+                    if len(sub_MIS) == 0:
+                        MIS_over_sum_child += 0
+                    else:
+                        MIS_over_sum_child += max(sub_MIS)
                     if debug:
                         print("\t\tsub_MIS:{}".format(sub_MIS))
                         print("\t\t\tMIS_over_sum_child:{}".format(MIS_over_sum_child))
-                T[curr_bag]["dp"][iset] = w + MIS_over_sum_child
+                #end summation
+
+                T_dict[curr_bag]["dp"][u_binary] = w + MIS_over_sum_child
 
             if debug:
-                print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
+                print("internal {} dp:\t{}".format(curr_bag, T_dict[curr_bag]["dp"]))
     #################################################
     #        return Max Independent Set (MIS)       #
     #################################################
 
     # get T_r(U), where U is independent subset of bag Vr
-    alpha = max(T[root]["dp"])
+
+    print(T_dict[root]["dp"])
+    alpha = max(T_dict[root]["dp"])
 
     return alpha
-
-
-def parse_contents(i, t):
-    s = t.nodes(data=True)[i - 1][1]['contents']
-    if s == "":
-        return []
-    return list(map(lambda x: int(x), str.split(s, " ")))
 
 
 def isets(bag, G):
     s = len(bag)
     ind_sets = np.arange(0, 2**s)
-    return list(filter(lambda x: is_independent(x, G), ind_sets))
+    return list(filter(lambda x: is_independent(bag, x, G), ind_sets))
 
-def is_independent(set, G):
-    # print("set:{}".format(set))
-    if set != 0 and ((set & (set - 1)) == 0):
+def is_independent(bag, set, G, flag=False):
+    if(set & (set - 1)) == 0:
         return True
 
     indicies_to_check = []
@@ -257,14 +258,17 @@ def is_independent(set, G):
     # print("indicies_to_check:{}".format(indicies_to_check))
     for j in range(len(indicies_to_check)):
         for k in range(len(indicies_to_check)):
-            if (not j == k) and G.has_edge(indicies_to_check[j], indicies_to_check[k]):
+            # if flag:
+            #     print("checking edge: ({}, {})".format(bag[indicies_to_check[j] - 1], bag[indicies_to_check[k] - 1]))
+            if (not j == k) and G.has_edge(bag[indicies_to_check[j]-1], bag[indicies_to_check[k]-1]):
+                # print("edge: ({}, {}) exists".format(bag[indicies_to_check[j] - 1], bag[indicies_to_check[k] - 1]))
                 return False
 
     return True
 
 def parse_bits(vertex_set, iset):
     indicies_to_check = []
-    i = 1
+    i = 0
     while iset > 0:
         if iset % 2 == 1:
             indicies_to_check.append(i)
@@ -273,7 +277,7 @@ def parse_bits(vertex_set, iset):
 
     vertices = []
     for j in range(len(indicies_to_check)):
-        vertices.append(vertex_set[indicies_to_check[j] - 1])
+        vertices.append(vertex_set[indicies_to_check[j]])
     return vertices
 
 
@@ -309,52 +313,15 @@ if __name__ == "__main__":
     print("\tnum nodes:\t{}".format(t_n))
     print("\tnum edges:\t{}".format(t_m))
 
-
-
-    # T_dict = {
-            # 1: {
-                # 'children': [2,3,4],
-                # 'vertices': [1]
-                # },
-            # 2: {
-                # 'children': [5],
-                # 'vertices': [2]
-                # },
-            # 3: {
-                # 'children': [7,8],
-                # 'vertices': [2]
-                # },
-            # 4: {
-                # 'children': [],
-                # 'vertices': [2]
-                # },
-            # 5: {
-                # 'children': [6],
-                # 'vertices': [2]
-                # },
-            # 6: {
-                # 'children': [],
-                # 'vertices': [3]
-                # },
-            # 7: {
-                # 'children': [],
-                # 'vertices': [3]
-                # },
-            # 8: {
-                # 'children': [],
-                # 'vertices': [3]
-                # }
-            # }
-
-
     _, T_dict = root_tree(T)
 
-    if (args.debug):
-        pp.pprint(T_dict)
+    # if (args.debug):
+    #     pp.pprint(T_dict)
 
-    alpha = MIS(G, T_dict, tw, args.debug)
+    # args.debug = False
+    alpha = MIS(G, T_dict, tw, T, args.debug)
 
-    if (args.debug):
-        pp.pprint(T_dict)
+    # if (args.debug):
+        # pp.pprint(T_dict)
 
     print("MIS alpha:{}".format(alpha))
