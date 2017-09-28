@@ -1,4 +1,5 @@
 #!/bin/bash
+trap "exit" INT
 
 for filepath in data/*.gr
 do
