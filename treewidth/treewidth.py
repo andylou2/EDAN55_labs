@@ -164,7 +164,7 @@ def MIS(G, T, tw):
             # is leaf
             for iset in isets(T[curr_bag]["vertices"], G):
                 # memoize local MIS
-                T[curr_bag]["dp"][iset] = bin(iset).count('1')
+                T[curr_bag]["dp"][iset] = iset
 
             print("leaf {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
 
@@ -185,12 +185,12 @@ def MIS(G, T, tw):
                         # check that U_i ^ V_t = U ^ V_t_i
                         u_i = parse_bits(v_t_i, c_iset)
                         if c_iset != -1 and len(list(filter(lambda x: x in v_t, u_i))) == len(list(filter(lambda x: x in v_t_i, u))):
-                            temp.append((w + c_iset - len(list(filter(lambda x: x in u, u_i)))))
+                            temp.append((w + len(u_i) - len(list(filter(lambda x: x in u, u_i)))))
                     print("temp:{}".format(temp))
-                    # if (len(temp) == 0):
-                    #     T[curr_bag]["dp"][iset] = []
-                    # else:
-                    T[curr_bag]["dp"][iset] = max(temp)
+                    if (len(temp) == 0):
+                        T[curr_bag]["dp"][iset] = 0
+                    else:
+                        T[curr_bag]["dp"][iset] = max(temp)
             print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
             # pass
     #################################################
