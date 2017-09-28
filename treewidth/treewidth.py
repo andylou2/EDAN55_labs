@@ -120,12 +120,13 @@ def parse_contents_(i, t):
     print("s: {}".format(s))
     return list(map(lambda x: int(x), str.split(s, " ")))
 
-def MIS(G, T, tw):
+def MIS(G, T, tw, debug=False):
     """
     DESC:   Calculate MIS using K&T algorithm
     INPUT:  original graph G networkx object
             tree T in dictionary format
             treewidth tw 
+            debug flag for print statements debugging
             assumption: tree T rooted at 1
     OUTPUT: alpha MIS value
     """
@@ -158,7 +159,8 @@ def MIS(G, T, tw):
     #          calculate MIS from leaves up         #
     #################################################
 
-    print("processing order {}".format(processing_line))
+    if debug:
+        print("processing order {}".format(processing_line))
     while processing_line != []:
         curr_bag = processing_line.pop()
         if T[curr_bag]['children'] == []:
@@ -167,26 +169,31 @@ def MIS(G, T, tw):
                 # memoize local MIS
                 T[curr_bag]["dp"][iset] = bin(iset).count('1')
 
-            print("leaf {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
+            if debug:
+                print("leaf {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
 
         else:
             # internal node
             v_t = T[curr_bag]["vertices"]
-            print("internal bag {}".format(curr_bag))
-            print("bag contents {}".format(v_t))
+
+            if debug:
+                print("internal bag {}".format(curr_bag))
+                print("bag contents {}".format(v_t))
 
             # loop over independent set U of current bag
             for iset in isets(v_t, G):
                 w = bin(iset).count('1')
                 u = parse_bits(v_t, iset)
 
-                print("\tw: {}\tu:{}".format(w, u))
+                if debug:
+                    print("\tw: {}\tu:{}".format(w, u))
 
                 MIS_over_sum_child = 0
 
                 # calculate summation portion over children
                 for child in T[curr_bag]["children"]:
-                    print("\t\tchild bag {}".format(child))
+                    if debug:
+                        print("\t\tchild bag {}".format(child))
                     v_t_i = T[child]["vertices"]
 
                     sub_MIS = []
@@ -206,12 +213,13 @@ def MIS(G, T, tw):
 
 
                     MIS_over_sum_child += max(sub_MIS)
-                    print("\t\tsub_MIS:{}".format(sub_MIS))
-                    print("\t\t\tMIS_over_sum_child:{}".format(MIS_over_sum_child))
+                    if debug:
+                        print("\t\tsub_MIS:{}".format(sub_MIS))
+                        print("\t\t\tMIS_over_sum_child:{}".format(MIS_over_sum_child))
                 T[curr_bag]["dp"][iset] = w + MIS_over_sum_child
 
-            print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
-            # pass
+            if debug:
+                print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
     #################################################
     #        return Max Independent Set (MIS)       #
     #################################################
@@ -345,7 +353,7 @@ if __name__ == "__main__":
     if (args.debug):
         pp.pprint(T_dict)
 
-    alpha = MIS(G, T_dict, tw)
+    alpha = MIS(G, T_dict, tw, args.debug)
 
     if (args.debug):
         pp.pprint(T_dict)
