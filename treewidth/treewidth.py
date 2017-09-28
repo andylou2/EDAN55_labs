@@ -117,6 +117,7 @@ def root_tree(t):
 
 def parse_contents_(i, t):
     s = t.nodes(data=True)[i - 1][1]['contents']
+    print("s: {}".format(s))
     return list(map(lambda x: int(x), str.split(s, " ")))
 
 def MIS(G, T, tw):
@@ -164,7 +165,7 @@ def MIS(G, T, tw):
             # is leaf
             for iset in isets(T[curr_bag]["vertices"], G):
                 # memoize local MIS
-                T[curr_bag]["dp"][iset] = iset
+                T[curr_bag]["dp"][iset] = bin(iset).count('1')
 
             print("leaf {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
 
@@ -179,31 +180,35 @@ def MIS(G, T, tw):
                 w = bin(iset).count('1')
                 u = parse_bits(v_t, iset)
 
-                print("\tw: {}\tu:{}\n".format(w, u))
+                print("\tw: {}\tu:{}".format(w, u))
+
+                MIS_over_sum_child = 0
 
                 # calculate summation portion over children
                 for child in T[curr_bag]["children"]:
-                    print("\tchild bag {}".format(child))
+                    print("\t\tchild bag {}".format(child))
                     v_t_i = T[child]["vertices"]
 
                     sub_MIS = []
 
                     # loop over independent set U_i
-                    for c_iset in T[child]['dp']:
+
+                    for idx, c_iset in enumerate(T[child]['dp']):
                         # condition 2: check U_i is independent
                         if c_iset != -1:
-                            u_i = parse_bits(v_t_i, c_iset)
+                            u_i = parse_bits(v_t_i, idx)
 
                             # condition 1: # check that U_i ^ V_t = U ^ V_t_i
-                            if len(list(filter(lambda x: x in v_t, u_i))) == \
-                                len(list(filter(lambda x: x in v_t_i, u))):
-                                sub_MIS.append(w+(len(u_i) - len(list(filter(lambda x: x in u, u_i)))))
+                            if list(filter(lambda x: x in v_t, u_i)) == \
+                                list(filter(lambda x: x in v_t_i, u)):
 
-                    print("\tsub_MIS:{}".format(sub_MIS))
-                    # if (len(temp) == 0):
-                    #     T[curr_bag]["dp"][iset] = []
-                    # else:
-                    T[curr_bag]["dp"][iset] = max(sub_MIS)
+                                sub_MIS.append((c_iset - len(list(filter(lambda x: x in u, u_i)))))
+
+
+                    MIS_over_sum_child += max(sub_MIS)
+                    print("\t\tsub_MIS:{}".format(sub_MIS))
+                    print("\t\t\tMIS_over_sum_child:{}".format(MIS_over_sum_child))
+                T[curr_bag]["dp"][iset] = w + MIS_over_sum_child
 
             print("internal {} dp:\t{}".format(curr_bag, T[curr_bag]["dp"]))
             # pass
