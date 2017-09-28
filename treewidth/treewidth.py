@@ -117,7 +117,6 @@ def root_tree(t):
 
 def parse_contents_(i, t):
     s = t.nodes(data=True)[i - 1][1]['contents']
-    print("s: {}".format(s))
     return list(map(lambda x: int(x), str.split(s, " ")))
 
 def MIS(G, T, tw):
