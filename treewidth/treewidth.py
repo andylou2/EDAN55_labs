@@ -118,13 +118,6 @@ def root_tree(t):
         tree_data[i]['dp'] = np.full(2**len(tree_data[i]['vertices']), -1).tolist()
     return tree, tree_data
 
-
-# def parse_contents_(i, t):
-#     s = t.nodes(data=True)[i - 1][1]['contents']
-#     if s == '':
-#         return []
-#     return list(map(lambda x: int(x), str.split(s, " ")))
-
 def MIS(G, T_dict, tw, T, debug=False):
     """
     DESC:   Calculate MIS using K&T algorithm
@@ -160,7 +153,7 @@ def MIS(G, T_dict, tw, T, debug=False):
 
     # post-order for processing leaves before parent
     processing_stack = list(nx.dfs_postorder_nodes(T, root))
-    # processing_stack = [processing_stack[0]]
+
     for curr_bag in processing_stack:
         if T_dict[curr_bag]['children'] == []:
             # is leaf
@@ -205,13 +198,14 @@ def MIS(G, T_dict, tw, T, debug=False):
 
                             u_i_intersect_v_t = list(filter(lambda x: x in v_t, u_i))
                             v_t_i_intersect_u =list(filter(lambda x: x in v_t_i, u))
+                            
                             if debug:
                                 print("\t\t\tu_i intersects v_t: {}".format(u_i_intersect_v_t))
                                 print("\t\t\tv_t_i intersects u: {}".format(v_t_i_intersect_u))
+                            
                             # condition 1: # check that U_i ^ V_t = U ^ V_t_i
                             if u_i_intersect_v_t == v_t_i_intersect_u:
                                 sub_MIS.append((c_iset - len(list(filter(lambda x: x in u, u_i)))))
-                    # end loop over independentset U_i
 
                     if len(sub_MIS) == 0:
                         MIS_over_sum_child += 0
@@ -220,25 +214,29 @@ def MIS(G, T_dict, tw, T, debug=False):
                     if debug:
                         print("\t\tsub_MIS:{}".format(sub_MIS))
                         print("\t\t\tMIS_over_sum_child:{}".format(MIS_over_sum_child))
-                #end summation
 
                 T_dict[curr_bag]["dp"][u_binary] = w + MIS_over_sum_child
 
             if debug:
                 print("internal {} dp:\t{}".format(curr_bag, T_dict[curr_bag]["dp"]))
+                
     #################################################
     #        return Max Independent Set (MIS)       #
     #################################################
 
     # get T_r(U), where U is independent subset of bag Vr
-
-    print(T_dict[root]["dp"])
     alpha = max(T_dict[root]["dp"])
 
     return alpha
 
 
 def isets(bag, G):
+    """
+    DESC:   Returns list of independent sets in bag
+    INPUT:  original graph G networkx object
+            bag - list of vertices v subset of V(G) 
+    OUTPUT: list of independent sets
+    """
     s = len(bag)
     ind_sets = np.arange(0, 2**s)
     return list(filter(lambda x: is_independent(bag, x, G), ind_sets))
@@ -258,10 +256,7 @@ def is_independent(bag, set, G, flag=False):
     # print("indicies_to_check:{}".format(indicies_to_check))
     for j in range(len(indicies_to_check)):
         for k in range(len(indicies_to_check)):
-            # if flag:
-            #     print("checking edge: ({}, {})".format(bag[indicies_to_check[j] - 1], bag[indicies_to_check[k] - 1]))
             if (not j == k) and G.has_edge(bag[indicies_to_check[j]-1], bag[indicies_to_check[k]-1]):
-                # print("edge: ({}, {}) exists".format(bag[indicies_to_check[j] - 1], bag[indicies_to_check[k] - 1]))
                 return False
 
     return True
@@ -280,12 +275,11 @@ def parse_bits(vertex_set, iset):
         vertices.append(vertex_set[indicies_to_check[j]])
     return vertices
 
-
-
 if __name__ == "__main__":
 
     # pretty printer
     pp = pprint.PrettyPrinter(indent=4)
+    
     # parse cmdline args
     parser = argparse.ArgumentParser(description='Treewidth Algorithm')
     parser.add_argument('-f', '--filename', nargs='?',
@@ -298,12 +292,13 @@ if __name__ == "__main__":
     filepath = os.path.join(os.getcwd(),'data',args.filename)
     
     # read graphs *.{gr|td}
-
     G, T, tw = read_graphs(filepath)
+    
     g_n = len(G.nodes())
     g_m = len(G.edges())
     t_n = len(T.nodes())
     t_m = len(T.edges())
+    
     print("filename:{}".format(args.filename))
     print("G")
     print("\tnum nodes:\t{}".format(g_n))
@@ -315,13 +310,9 @@ if __name__ == "__main__":
 
     _, T_dict = root_tree(T)
 
-    # if (args.debug):
-    #     pp.pprint(T_dict)
-
-    # args.debug = False
+    if (args.debug):
+        pp.pprint(T_dict)
+    
     alpha = MIS(G, T_dict, tw, T, args.debug)
-
-    # if (args.debug):
-        # pp.pprint(T_dict)
 
     print("MIS alpha:{}".format(alpha))
