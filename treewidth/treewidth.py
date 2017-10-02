@@ -1,10 +1,8 @@
-import sys
 import os
 import argparse
-import random
 import networkx as nx
 import numpy as np
-import json
+import time
 import pprint
 
 def read_graphs(pathname):
@@ -118,18 +116,20 @@ def root_tree(t):
         tree_data[i]['dp'] = np.full(2**len(tree_data[i]['vertices']), -1).tolist()
     return tree, tree_data
 
-def MIS(G, T_dict, tw, T, debug=False):
+def MIS(G, T_dict, tw, T, timeout=60.0, debug=False):
     """
     DESC:   Calculate MIS using K&T algorithm
     INPUT:  original graph G networkx object
             tree T_dict in dictionary format
             treewidth tw
             tree T networkx object
+            timeout max time the algo runs for
             debug flag for print statements debugging
             assumption: tree T rooted at 1
     OUTPUT: alpha MIS value
     """
 
+    start = time.time()
     alpha = 0
     # dp table stored in tree T under 'dp' key
 
@@ -155,6 +155,12 @@ def MIS(G, T_dict, tw, T, debug=False):
     processing_stack = list(nx.dfs_postorder_nodes(T, root))
 
     for curr_bag in processing_stack:
+
+        # algo timesout
+        if time.time() - start > timeout:
+            print("timeout at {}s".format(time.time() - start))
+            exit(1)
+
         if T_dict[curr_bag]['children'] == []:
             # is leaf
             for u_binary in isets(T_dict[curr_bag]["vertices"], G):
@@ -227,6 +233,7 @@ def MIS(G, T_dict, tw, T, debug=False):
     # get T_r(U), where U is independent subset of bag Vr
     alpha = max(T_dict[root]["dp"])
 
+    print("finished at {}s".format(time.time() - start))
     return alpha
 
 
@@ -313,6 +320,6 @@ if __name__ == "__main__":
     if (args.debug):
         pp.pprint(T_dict)
     
-    alpha = MIS(G, T_dict, tw, T, args.debug)
+    alpha = MIS(G, T_dict, tw, T, 60, args.debug)
 
     print("MIS alpha:{}".format(alpha))
