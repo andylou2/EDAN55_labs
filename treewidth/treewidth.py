@@ -4,6 +4,7 @@ import networkx as nx
 import numpy as np
 import time
 import pprint
+import signal
 
 def read_graphs(pathname):
     """
@@ -98,6 +99,10 @@ def read_T_ (pathname):
 
     return T, size-1
 
+def timeout_handler(signum, frame):
+   print("Max Independent Set timed out")
+   raise Exception("timeout")
+
 def root_tree(t):
     """
     :param t:   tree
@@ -130,6 +135,7 @@ def MIS(G, T_dict, tw, T, timeout=60.0, debug=False):
     """
 
     start = time.time()
+    signal.alarm(timeout) #set timeout alarm countdown
     alpha = 0
     # dp table stored in tree T under 'dp' key
 
@@ -157,9 +163,9 @@ def MIS(G, T_dict, tw, T, timeout=60.0, debug=False):
     for curr_bag in processing_stack:
 
         # algo timesout
-        if time.time() - start > timeout:
-            print("timeout at {}s".format(time.time() - start))
-            exit(1)
+        # if time.time() - start > timeout:
+        #     print("timeout at {}s".format(time.time() - start))
+        #     exit(1)
 
         if T_dict[curr_bag]['children'] == []:
             # is leaf
@@ -234,6 +240,10 @@ def MIS(G, T_dict, tw, T, timeout=60.0, debug=False):
     alpha = max(T_dict[root]["dp"])
 
     print("finished at {}s".format(time.time() - start))
+    fil = open("data/results.txt", "a")
+    fil.write("Finished in {} seconds\n".format(time.time() - start))
+    fil.write("MIS alpha: {}\n\n".format(alpha))
+    fil.close()
     return alpha
 
 
@@ -291,6 +301,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Treewidth Algorithm')
     parser.add_argument('-f', '--filename', nargs='?',
                         default='eppstein', help='filename')
+    parser.add_argument('-m', '--timeout', type=int, default=60,
+                        help='sets timeout limit')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='debug mode: print the tree')
 
@@ -317,9 +329,25 @@ if __name__ == "__main__":
 
     _, T_dict = root_tree(T)
 
+    signal.signal(signal.SIGALRM, timeout_handler)
+
+    fil = open("data/results.txt", 'a')
+    fil.write("File: {}\n".format(args.filename))
+    fil.write("\ttreewidth:\t{}\n".format(tw))
+    fil.write("\tnum nodes:\t{}\n".format(g_n))
+    fil.close()
+
     if (args.debug):
         pp.pprint(T_dict)
-    
-    alpha = MIS(G, T_dict, tw, T, 60, args.debug)
 
-    print("MIS alpha:{}".format(alpha))
+    try:
+        alpha = MIS(G, T_dict, tw, T, timeout=args.timeout, debug=args.debug)
+        print("MIS alpha:{}\n".format(alpha))
+    except Exception as e:
+        fil = open("data/results.txt", "a")
+        fil.write("MIS Timed out after {} seconds\n\n".format(args.timeout))
+        pass
+
+    fil.close()
+
+
