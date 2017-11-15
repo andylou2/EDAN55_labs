@@ -1,0 +1,718 @@
+File: AhrensSzekeresGeneralizedQuadrangleGraph_3
+	treewidth:	17
+	num nodes:	27
+MIS Timed out after 60 seconds
+
+File: BalancedTree_3_5
+	treewidth:	1
+	num nodes:	364
+Finished in 0.02581191062927246 seconds
+MIS alpha: 273
+
+File: BarbellGraph_10_5
+	treewidth:	9
+	num nodes:	25
+Finished in 0.02250194549560547 seconds
+MIS alpha: 5
+
+File: BidiakisCube
+	treewidth:	4
+	num nodes:	12
+Finished in 0.014013051986694336 seconds
+MIS alpha: 5
+
+File: BlanusaFirstSnarkGraph
+	treewidth:	5
+	num nodes:	18
+Finished in 0.07273697853088379 seconds
+MIS alpha: 8
+
+File: BlanusaSecondSnarkGraph
+	treewidth:	4
+	num nodes:	18
+Finished in 0.044381141662597656 seconds
+MIS alpha: 7
+
+File: BrinkmannGraph
+	treewidth:	8
+	num nodes:	21
+Finished in 1.3819661140441895 seconds
+MIS alpha: 7
+
+File: ChvatalGraph
+	treewidth:	6
+	num nodes:	12
+Finished in 0.03977203369140625 seconds
+MIS alpha: 4
+
+File: CirculantGraph_20_5
+	treewidth:	2
+	num nodes:	20
+Finished in 0.0021600723266601562 seconds
+MIS alpha: 10
+
+File: CircularLadderGraph_20
+	treewidth:	4
+	num nodes:	40
+Finished in 0.14406299591064453 seconds
+MIS alpha: 20
+
+File: ClebschGraph
+	treewidth:	8
+	num nodes:	16
+Finished in 0.3798649311065674 seconds
+MIS alpha: 5
+
+File: CompleteBipartiteGraph_25_20
+	treewidth:	20
+	num nodes:	45
+MIS Timed out after 60 seconds
+
+File: CompleteGraph_15
+	treewidth:	14
+	num nodes:	15
+Finished in 0.4416201114654541 seconds
+MIS alpha: 1
+
+File: CoxeterGraph
+	treewidth:	7
+	num nodes:	28
+Finished in 2.1231729984283447 seconds
+MIS alpha: 12
+
+File: CycleGraph_100
+	treewidth:	2
+	num nodes:	100
+Finished in 0.024506092071533203 seconds
+MIS alpha: 50
+
+File: DesarguesGraph
+	treewidth:	6
+	num nodes:	20
+Finished in 0.2936990261077881 seconds
+MIS alpha: 10
+
+File: DodecahedralGraph
+	treewidth:	6
+	num nodes:	20
+Finished in 0.1951601505279541 seconds
+MIS alpha: 8
+
+File: DorogovtsevGoltsevMendesGraph
+	treewidth:	2
+	num nodes:	3282
+Finished in 0.4521620273590088 seconds
+MIS alpha: 2187
+
+File: DoubleStarSnark
+	treewidth:	6
+	num nodes:	30
+Finished in 0.7039389610290527 seconds
+MIS alpha: 13
+
+File: DurerGraph
+	treewidth:	4
+	num nodes:	12
+Finished in 0.012144088745117188 seconds
+MIS alpha: 4
+
+File: DyckGraph
+	treewidth:	7
+	num nodes:	32
+Finished in 1.3551280498504639 seconds
+MIS alpha: 16
+
+File: EllinghamHorton54Graph
+	treewidth:	6
+	num nodes:	54
+Finished in 1.354205846786499 seconds
+MIS alpha: 27
+
+File: EllinghamHorton78Graph
+	treewidth:	6
+	num nodes:	78
+Finished in 1.8996210098266602 seconds
+MIS alpha: 39
+
+File: ErreraGraph
+	treewidth:	6
+	num nodes:	17
+Finished in 0.038342952728271484 seconds
+MIS alpha: 5
+
+File: F26AGraph
+	treewidth:	7
+	num nodes:	26
+Finished in 2.1509621143341064 seconds
+MIS alpha: 13
+
+File: FibonacciTree_10
+	treewidth:	1
+	num nodes:	143
+Finished in 0.009708881378173828 seconds
+MIS alpha: 72
+
+File: FlowerSnark
+	treewidth:	6
+	num nodes:	20
+Finished in 0.31968092918395996 seconds
+MIS alpha: 9
+
+File: FolkmanGraph
+	treewidth:	6
+	num nodes:	20
+Finished in 0.337050199508667 seconds
+MIS alpha: 10
+
+File: FranklinGraph
+	treewidth:	4
+	num nodes:	12
+Finished in 0.015710115432739258 seconds
+MIS alpha: 6
+
+File: FriendshipGraph_10
+	treewidth:	2
+	num nodes:	21
+Finished in 0.002393007278442383 seconds
+MIS alpha: 10
+
+File: FruchtGraph
+	treewidth:	3
+	num nodes:	12
+Finished in 0.008337020874023438 seconds
+MIS alpha: 5
+
+File: GeneralizedPetersenGraph_10_4
+	treewidth:	6
+	num nodes:	20
+Finished in 0.26773810386657715 seconds
+MIS alpha: 8
+
+File: GoethalsSeidelGraph_2_3
+	treewidth:	11
+	num nodes:	16
+Finished in 0.20880889892578125 seconds
+MIS alpha: 4
+
+File: GoldnerHararyGraph
+	treewidth:	3
+	num nodes:	11
+Finished in 0.001605987548828125 seconds
+MIS alpha: 6
+
+File: GrayGraph
+	treewidth:	9
+	num nodes:	54
+MIS Timed out after 60 seconds
+
+File: Grid2dGraph_5_5
+	treewidth:	5
+	num nodes:	25
+Finished in 0.15523099899291992 seconds
+MIS alpha: 13
+
+File: GrotzschGraph
+	treewidth:	5
+	num nodes:	11
+Finished in 0.00943303108215332 seconds
+MIS alpha: 5
+
+File: HanoiTowerGraph_4_3
+	treewidth:	13
+	num nodes:	64
+MIS Timed out after 60 seconds
+
+File: HararyGraph_6_15
+	treewidth:	6
+	num nodes:	15
+Finished in 0.02918100357055664 seconds
+MIS alpha: 3
+
+File: HarborthGraph
+	treewidth:	5
+	num nodes:	52
+Finished in 0.2161240577697754 seconds
+MIS alpha: 18
+
+File: HeawoodGraph
+	treewidth:	5
+	num nodes:	14
+Finished in 0.05524396896362305 seconds
+MIS alpha: 7
+
+File: HerschelGraph
+	treewidth:	3
+	num nodes:	11
+Finished in 0.00806283950805664 seconds
+MIS alpha: 6
+
+File: HexahedralGraph
+	treewidth:	3
+	num nodes:	8
+Finished in 0.003793001174926758 seconds
+MIS alpha: 4
+
+File: HoffmanGraph
+	treewidth:	6
+	num nodes:	16
+Finished in 0.2576611042022705 seconds
+MIS alpha: 8
+
+File: HoffmanSingletonGraph
+	treewidth:	25
+	num nodes:	50
+MIS Timed out after 60 seconds
+
+File: HoltGraph
+	treewidth:	9
+	num nodes:	27
+Finished in 20.059181928634644 seconds
+MIS alpha: 10
+
+File: HortonGrap
+	treewidth:	6
+	num nodes:	96
+Finished in 2.7731969356536865 seconds
+MIS alpha: 48
+
+File: HouseGraph
+	treewidth:	2
+	num nodes:	5
+Finished in 0.0005979537963867188 seconds
+MIS alpha: 2
+
+File: HouseXGraph
+	treewidth:	3
+	num nodes:	5
+Finished in 0.0004000663757324219 seconds
+MIS alpha: 2
+
+File: HyperStarGraph_10_2
+	treewidth:	8
+	num nodes:	45
+Finished in 0.6386210918426514 seconds
+MIS alpha: 36
+
+File: IcosahedralGraph
+	treewidth:	6
+	num nodes:	12
+Finished in 0.022763967514038086 seconds
+MIS alpha: 3
+
+File: JohnsonGraph_8_2
+	treewidth:	18
+	num nodes:	28
+MIS Timed out after 60 seconds
+
+File: KittellGraph
+	treewidth:	7
+	num nodes:	23
+Finished in 0.11290502548217773 seconds
+MIS alpha: 7
+
+File: Klein7RegularGraph
+	treewidth:	13
+	num nodes:	24
+Finished in 8.01934003829956 seconds
+MIS alpha: 6
+
+File: KrackhardtKiteGraph
+	treewidth:	3
+	num nodes:	10
+Finished in 0.0013358592987060547 seconds
+MIS alpha: 4
+
+File: LadderGraph_20
+	treewidth:	2
+	num nodes:	40
+Finished in 0.018431901931762695 seconds
+MIS alpha: 20
+
+File: LollipopGraph_7_5
+	treewidth:	6
+	num nodes:	12
+Finished in 0.0021369457244873047 seconds
+MIS alpha: 4
+
+File: MarkstroemGraph
+	treewidth:	4
+	num nodes:	24
+Finished in 0.05887603759765625 seconds
+MIS alpha: 9
+
+File: McGeeGraph
+	treewidth:	7
+	num nodes:	24
+Finished in 2.446743965148926 seconds
+MIS alpha: 10
+
+File: MeredithGraph
+	treewidth:	7
+	num nodes:	70
+Finished in 3.2599730491638184 seconds
+MIS alpha: 34
+
+File: MoebiusKantorGraph
+	treewidth:	5
+	num nodes:	16
+Finished in 0.12250518798828125 seconds
+MIS alpha: 8
+
+File: MoserSpindle
+	treewidth:	3
+	num nodes:	7
+Finished in 0.000885009765625 seconds
+MIS alpha: 2
+
+File: NKStarGraph_5_3
+	treewidth:	14
+	num nodes:	60
+MIS Timed out after 60 seconds
+
+File: NauruGraph
+	treewidth:	6
+	num nodes:	24
+Finished in 0.466900110244751 seconds
+MIS alpha: 12
+
+File: NonisotropicOrthogonalPolarGraph_3_5
+	treewidth:	10
+	num nodes:	15
+Finished in 0.10247302055358887 seconds
+MIS alpha: 3
+
+File: OctahedralGraph
+	treewidth:	4
+	num nodes:	6
+Finished in 0.0012049674987792969 seconds
+MIS alpha: 2
+
+File: OddGraph_3
+	treewidth:	4
+	num nodes:	10
+Finished in 0.009927034378051758 seconds
+MIS alpha: 4
+
+File: OddGraph_4
+	treewidth:	12
+	num nodes:	35
+MIS Timed out after 60 seconds
+
+File: OrthogonalArrayBlockGraph_4_3
+	treewidth:	8
+	num nodes:	9
+Finished in 0.005586862564086914 seconds
+MIS alpha: 1
+
+File: OrthogonalPolarGraph_5_2
+	treewidth:	9
+	num nodes:	15
+Finished in 0.1994459629058838 seconds
+MIS alpha: 5
+
+File: PaleyGraph_17
+	treewidth:	11
+	num nodes:	17
+Finished in 0.398439884185791 seconds
+MIS alpha: 3
+
+File: PappusGraph
+	treewidth:	6
+	num nodes:	18
+Finished in 0.3369109630584717 seconds
+MIS alpha: 9
+
+File: PasechnikGraph_1
+	treewidth:	2
+	num nodes:	9
+Finished in 0.00046896934509277344 seconds
+MIS alpha: 3
+
+File: PathGraph_100
+	treewidth:	1
+	num nodes:	100
+Finished in 0.008109092712402344 seconds
+MIS alpha: 50
+
+File: PetersenGraph
+	treewidth:	4
+	num nodes:	10
+Finished in 0.010689020156860352 seconds
+MIS alpha: 4
+
+File: PoussinGraph
+	treewidth:	6
+	num nodes:	15
+Finished in 0.026500225067138672 seconds
+MIS alpha: 5
+
+File: RingedTree_6
+	treewidth:	9
+	num nodes:	63
+Finished in 7.312948942184448 seconds
+MIS alpha: 21
+
+File: RobertsonGraph
+	treewidth:	8
+	num nodes:	19
+Finished in 1.0007810592651367 seconds
+MIS alpha: 7
+
+File: SchlaefliGraph
+	treewidth:	21
+	num nodes:	27
+MIS Timed out after 60 seconds
+
+File: ShrikhandeGraph
+	treewidth:	9
+	num nodes:	16
+Finished in 0.12749290466308594 seconds
+MIS alpha: 4
+
+File: SierpinskiGasketGraph_3
+	treewidth:	3
+	num nodes:	15
+Finished in 0.003197908401489258 seconds
+MIS alpha: 6
+
+File: SierpinskiGasketGraph_5
+	treewidth:	4
+	num nodes:	123
+Finished in 0.18818902969360352 seconds
+MIS alpha: 42
+
+File: SousselierGraph
+	treewidth:	5
+	num nodes:	16
+Finished in 0.0821540355682373 seconds
+MIS alpha: 6
+
+File: SquaredSkewHadamardMatrixGraph_1
+	treewidth:	5
+	num nodes:	9
+Finished in 0.004264116287231445 seconds
+MIS alpha: 3
+
+File: StarGraph_100
+	treewidth:	1
+	num nodes:	101
+Finished in 0.004430055618286133 seconds
+MIS alpha: 100
+
+File: SwitchedSquaredSkewHadamardMatrixGraph_1
+	treewidth:	4
+	num nodes:	10
+Finished in 0.010149002075195312 seconds
+MIS alpha: 4
+
+File: SylvesterGraph
+	treewidth:	15
+	num nodes:	36
+MIS Timed out after 60 seconds
+
+File: SymplecticDualPolarGraph_4_3
+	treewidth:	27
+	num nodes:	40
+MIS Timed out after 60 seconds
+
+File: SzekeresSnarkGraph
+	treewidth:	7
+	num nodes:	50
+Finished in 3.338146924972534 seconds
+MIS alpha: 21
+
+File: T2starGeneralizedQuadrangleGraph_2
+	treewidth:	4
+	num nodes:	8
+Finished in 0.0062389373779296875 seconds
+MIS alpha: 4
+
+File: TaylorTwographDescendantSRG_3
+	treewidth:	17
+	num nodes:	27
+MIS Timed out after 60 seconds
+
+File: TaylorTwographSRG_3
+	treewidth:	22
+	num nodes:	28
+MIS Timed out after 60 seconds
+
+File: TetrahedralGraph
+	treewidth:	3
+	num nodes:	4
+Finished in 0.0002281665802001953 seconds
+MIS alpha: 1
+
+File: ThomsenGraph
+	treewidth:	3
+	num nodes:	6
+Finished in 0.0012810230255126953 seconds
+MIS alpha: 3
+
+File: TietzeGraph
+	treewidth:	4
+	num nodes:	12
+Finished in 0.01491403579711914 seconds
+MIS alpha: 5
+
+File: Toroidal6RegularGrid2dGraph_4_6
+	treewidth:	9
+	num nodes:	24
+Finished in 0.7108869552612305 seconds
+MIS alpha: 6
+
+File: TruncatedTetrahedralGraph
+	treewidth:	4
+	num nodes:	12
+Finished in 0.011264801025390625 seconds
+MIS alpha: 4
+
+File: TutteCoxeterGraph
+	treewidth:	8
+	num nodes:	30
+Finished in 6.70978307723999 seconds
+MIS alpha: 15
+
+File: TutteGraph
+	treewidth:	5
+	num nodes:	46
+Finished in 0.32476186752319336 seconds
+MIS alpha: 19
+
+File: WagnerGraph
+	treewidth:	4
+	num nodes:	8
+Finished in 0.0034618377685546875 seconds
+MIS alpha: 3
+
+File: WatkinsSnarkGraph
+	treewidth:	7
+	num nodes:	50
+Finished in 2.1982369422912598 seconds
+MIS alpha: 20
+
+File: WellsGraph
+	treewidth:	14
+	num nodes:	32
+MIS Timed out after 60 seconds
+
+File: WheelGraph_100
+	treewidth:	3
+	num nodes:	100
+Finished in 0.05832791328430176 seconds
+MIS alpha: 49
+
+File: WienerArayaGraph
+	treewidth:	7
+	num nodes:	42
+Finished in 3.1374430656433105 seconds
+MIS alpha: 17
+
+File: WorldMap
+	treewidth:	5
+	num nodes:	166
+Finished in 0.08607292175292969 seconds
+MIS alpha: 78
+
+File: contiki_dhcpc_handle_dhcp
+	treewidth:	6
+	num nodes:	276
+Finished in 1.3399860858917236 seconds
+MIS alpha: 137
+
+File: contiki_lpp_dutycycle
+	treewidth:	5
+	num nodes:	102
+Finished in 0.1407029628753662 seconds
+MIS alpha: 51
+
+File: contiki_shell-netperf_process_thread_shell_netperf_process
+	treewidth:	4
+	num nodes:	666
+Finished in 0.5446429252624512 seconds
+MIS alpha: 326
+
+File: contiki_uip_uip_process
+	treewidth:	7
+	num nodes:	1452
+Finished in 6.940369129180908 seconds
+MIS alpha: 720
+
+File: coremark_core_main_main
+	treewidth:	2
+	num nodes:	637
+Finished in 0.14133691787719727 seconds
+MIS alpha: 315
+
+File: eppstein
+	treewidth:	2
+	num nodes:	8
+Finished in 0.0010471343994140625 seconds
+MIS alpha: 4
+
+File: p-num-vertices-larger
+	treewidth:	3
+	num nodes:	6
+Finished in 0.0010800361633300781 seconds
+MIS alpha: 4
+
+File: single-edge
+	treewidth:	1
+	num nodes:	2
+Finished in 0.00018906593322753906 seconds
+MIS alpha: 1
+
+File: single-vertex
+	treewidth:	0
+	num nodes:	1
+Finished in 0.00016498565673828125 seconds
+MIS alpha: 1
+
+File: stdlib_print_format
+	treewidth:	4
+	num nodes:	544
+Finished in 0.19808697700500488 seconds
+MIS alpha: 273
+
+File: two-vertices-2
+	treewidth:	1
+	num nodes:	2
+Finished in 0.00014519691467285156 seconds
+MIS alpha: 2
+
+File: two-vertices
+	treewidth:	0
+	num nodes:	2
+Finished in 0.00021982192993164062 seconds
+MIS alpha: 2
+
+File: web1
+	treewidth:	2
+	num nodes:	5
+Finished in 0.0006299018859863281 seconds
+MIS alpha: 3
+
+File: web2
+	treewidth:	2
+	num nodes:	5
+Finished in 0.0008230209350585938 seconds
+MIS alpha: 3
+
+File: web3
+	treewidth:	2
+	num nodes:	5
+Finished in 0.000637054443359375 seconds
+MIS alpha: 3
+
+File: web4
+	treewidth:	2
+	num nodes:	5
+Finished in 0.0007500648498535156 seconds
+MIS alpha: 3
+
+File: wedge
+	treewidth:	1
+	num nodes:	3
+Finished in 0.0003139972686767578 seconds
+MIS alpha: 2
+
